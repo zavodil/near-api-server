@@ -1,0 +1,16 @@
+{
+  "name": "near-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Vadim Ilin",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/hapi": "^18.1.0",
+    "body-parser": "~1.19.0",
+    "near-api-js": "~0.38.0"
+  }
+}
