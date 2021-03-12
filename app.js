@@ -9,15 +9,15 @@ const bodyParser = require('body-parser');
 const init = async () => {
 
     const server = Hapi.server({
-        port: 4000,
-        host: '95.216.165.53'
+        port: settings.server_port,
+        host: settings.server_host
     });
 
     server.route({
         method: 'GET',
         path: '/',
         handler: (request, h) => {
-            return 'Hello World!';
+            return 'Hello NEAR API!';
         }
     });
 
@@ -31,7 +31,7 @@ const init = async () => {
 
     server.route({
         method: 'POST',
-        path: '/add_user',
+        path: '/create_user',
         handler: async (request, h) => {
             const name = request.payload.name + "." + settings.masterAccountId;
             let account = await user.CreateKeyPair(name);
@@ -87,7 +87,6 @@ const init = async () => {
 };
 
 process.on('unhandledRejection', (err) => {
-
     console.log(err);
     process.exit(1);
 });

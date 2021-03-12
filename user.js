@@ -2,7 +2,9 @@ const nearApi = require('near-api-js');
 const settings = require('./settings');
 const nearSeedPhrase = require('near-seed-phrase');
 
-const fs = require('fs').promises;
+const fs = require('fs');
+
+const storageFolder = "storage";
 
 module.exports = {
     CreateKeyPair: async function (name) {
@@ -22,16 +24,17 @@ module.exports = {
      * @return {string}
      */
     GetFileName: function (account_id) {
-        return `storage/${account_id}.json`;
+        return `${storageFolder}/${account_id}.json`;
     },
 
     SaveKeyPair: async function (account) {
+        if (!fs.existsSync(storageFolder))
+            fs.mkdirSync(storageFolder);
+
         const filename = this.GetFileName(account.account_id);
         account.private_key = "ed25519:" + account.private_key;
 
-        console.log(account);
-
-        await fs.writeFile(filename, JSON.stringify(account));
+        await fs.promises.writeFile(filename, JSON.stringify(account));
     },
 
     /**
@@ -72,7 +75,7 @@ module.exports = {
 
     GetAccount: async function (account_id) {
         const filename = this.GetFileName(account_id);
-        return await fs.readFile(filename, 'utf8');
+        return await fs.promises.readFile(filename, 'utf8');
     },
 
     GetKeysFromSeedPhrase: async function (seedPhrase) {
