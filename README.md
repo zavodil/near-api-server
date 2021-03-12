@@ -43,6 +43,10 @@ Clone this repo and edit config.js file.
 * server_host: `PUBLIC_IP`
 * server_port: `PORT`
 
+Install modules
+
+`npm install`
+
 ###### Install Node.JS
 
 `sudo apt-get install -y nodejs`
@@ -55,7 +59,7 @@ Clone this repo and edit config.js file.
 
 NEAR API server will be available on `http://PUBLIC_IP:PORT`
 
-##Available methods
+##A vailable methods
 
 Send requests using Postman/Insomnia/etc
 
