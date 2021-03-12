@@ -1,5 +1,6 @@
 const nearApi = require('near-api-js');
 const settings = require('./settings');
+const blockchain = require('./blockchain');
 const nearSeedPhrase = require('near-seed-phrase');
 
 const fs = require('fs');
@@ -41,36 +42,19 @@ module.exports = {
      * @return {boolean}
      */
     CreateAccount: async function (new_account) {
-        const keyPair = nearApi.utils.KeyPair.fromString(settings.masterKey);
+        const account = await blockchain.GetMasterAccount();
 
-        const keyStore = new nearApi.keyStores.InMemoryKeyStore();
-        keyStore.setKey("default", settings.masterAccountId, keyPair);
+        const res = await account.createAccount(new_account.account_id, new_account.public_key, '200000000000000000000000');
 
-        let result = false;
-
-        await (async () => {
-            const near = await nearApi.connect({
-                networkId: "default",
-                deps: {keyStore},
-                masterAccount: settings.masterAccountId,
-                nodeUrl: 'https://rpc.testnet.near.org'
-            });
-
-            const account = await near.account(settings.masterAccountId);
-
-            const res = await account.createAccount(new_account.account_id, new_account.public_key, '200000000000000000000000');
-
-            try {
-                if (res['status'].hasOwnProperty('SuccessValue')) {
-                    await this.SaveKeyPair(new_account);
-                    result = true
-                }
-            } catch (e) {
-                console.log(e);
+        try {
+            if (res['status'].hasOwnProperty('SuccessValue')) {
+                await this.SaveKeyPair(new_account);
+                return true
             }
-        })();
-
-        return result;
+        } catch (e) {
+            console.log(e);
+        }
+        return false;
     },
 
     GetAccount: async function (account_id) {

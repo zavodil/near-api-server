@@ -10,7 +10,7 @@ module.exports = {
     View: async function (recipient, method, params) {
         const nearRpc = new nearApi.providers.JsonRpcProvider('https://rpc.testnet.near.org');
 
-        const account = new nearApi.Account({ provider: nearRpc });
+        const account = new nearApi.Account({provider: nearRpc});
         return await account.viewFunction(
             recipient,
             method,

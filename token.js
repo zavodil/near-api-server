@@ -30,10 +30,9 @@ module.exports = {
 
     TransferNFT: async function (tokenId, receiverId, enforceOwnerId, memo) {
         let account;
-        if (enforceOwnerId === settings.masterAccountId){
+        if (enforceOwnerId === settings.masterAccountId) {
             account = await blockchain.GetMasterAccount();
-        }
-        else{
+        } else {
             account = await blockchain.GetUserAccount(enforceOwnerId);
         }
 

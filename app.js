@@ -32,16 +32,16 @@ const init = async () => {
     server.route({
         method: 'POST',
         path: '/create_user',
-        handler: async (request, h) => {
+        handler: async (request) => {
             const name = request.payload.name + "." + settings.masterAccountId;
             let account = await user.CreateKeyPair(name);
 
             let status = await user.CreateAccount(account);
 
             if (status)
-                return `Account ${name} created. Public key: ${account.public_key}`;
+                return {text: `Account ${name} created. Public key: ${account.public_key}`};
             else
-                return "Error";
+                return {text: "Error"};
 
         }
     });
@@ -51,7 +51,7 @@ const init = async () => {
         path: '/parse_seed_phrase',
         handler: async (request, h) => {
             return await user.GetKeysFromSeedPhrase(request.payload.seed_phrase);
-            }
+        }
     });
 
     server.route({
