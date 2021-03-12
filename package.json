@@ -11,6 +11,7 @@
   "dependencies": {
     "@hapi/hapi": "^18.1.0",
     "body-parser": "~1.19.0",
-    "near-api-js": "~0.38.0"
+    "near-api-js": "~0.38.0",
+    "near-seed-phrase": "^0.1.0"
   }
 }

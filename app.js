@@ -38,13 +38,20 @@ const init = async () => {
 
             let status = await user.CreateAccount(account);
 
-            console.log(status);
             if (status)
                 return `Account ${name} created. Public key: ${account.public_key}`;
             else
                 return "Error";
 
         }
+    });
+
+    server.route({
+        method: 'POST',
+        path: '/parse_seed_phrase',
+        handler: async (request, h) => {
+            return await user.GetKeysFromSeedPhrase(request.payload.seed_phrase);
+            }
     });
 
     server.route({

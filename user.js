@@ -1,5 +1,7 @@
 const nearApi = require('near-api-js');
 const settings = require('./settings');
+const nearSeedPhrase = require('near-seed-phrase');
+
 const fs = require('fs').promises;
 
 module.exports = {
@@ -71,6 +73,10 @@ module.exports = {
     GetAccount: async function (account_id) {
         const filename = this.GetFileName(account_id);
         return await fs.readFile(filename, 'utf8');
+    },
+
+    GetKeysFromSeedPhrase: async function (seedPhrase) {
+        return nearSeedPhrase.parseSeedPhrase(seedPhrase);
     }
 };
 
