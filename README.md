@@ -35,7 +35,7 @@ Follow provided link and grant an access using the web wallet, then comeback to 
 
 ###### Configure API Server
 
-Clone this repo and edit config.js file.
+Clone this repo, go to the application folder and edit config.js file.
 
 * masterAccountId: `YOUR_ACCOUNT.testnet`
 * exports.masterKey: account private key. Copy from `/root/.near-credentials/default` or call `/parse_seed_phrase` from NEAR API  
@@ -59,7 +59,7 @@ Install modules
 
 NEAR API server will be available on `http://PUBLIC_IP:PORT`
 
-##A vailable methods
+## Available methods
 
 Send requests using Postman/Insomnia/etc
 
