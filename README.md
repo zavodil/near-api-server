@@ -4,6 +4,10 @@ Perform blockchain calls with the simple REST API.
 
 Create blockchain accounts, mint NFT, transfer NFT, view NFT owners with the POST/GET requests.
 
+Video Presentation:
+ 
+[![Live App Review 15 - NFT Server Side API](https://img.youtube.com/vi/d71OscmH4cA/0.jpg)](https://youtu.be/d71OscmH4cA)
+
 ## Install Guide
 
 ###### Install NEAR CLI
