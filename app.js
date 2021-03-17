@@ -97,8 +97,9 @@ const init = async () => {
             if (!min || !max)
                 min = max = 0;
             let response = [];
+
+            request = PrecessRequest(request);
             for (let i = min; i <= max; i++) {
-                request = PrecessRequest(request);
                 const tokenId = request.payload.token_id.replace("{inc}", i);
                 const metadata = request.payload.metadata;
 

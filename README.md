@@ -79,6 +79,19 @@ POST `mint_nft`
 ```
 Original token owner is `YOUR_ACCOUNT.testnet`
 
+Batch NFT minting 
+
+```
+{
+	"token_id": "test_{inc}",
+	"metadata": "",
+	"min": 21,
+	"max": 23
+}
+```
+
+This will create 3 NFTs: `test_21`, `test_22` and `test_23`
+
 Create user
 ---
 POST `create_user`
@@ -116,3 +129,14 @@ POST `parse_seed_phrase`
 	"seed_phrase" : "your seed phrase your seed phrase your seed phrase your seed phrase"
 }
 ```
+
+Faker data
+---
+If some value equals to the following tag then value will be filled with the random value:
+
+* {username}
+* {number}
+* {word}
+* {words}
+* {image}
+* {color}
