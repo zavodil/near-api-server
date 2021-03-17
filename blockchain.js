@@ -1,6 +1,5 @@
 const nearApi = require('near-api-js');
 const settings = require('./settings');
-const user = require('./user');
 
 module.exports = {
 
@@ -34,6 +33,8 @@ module.exports = {
     },
 
     GetUserAccount: async function (accountId) {
+        const user = require('./user');
+
         const account_raw = await user.GetAccount(accountId);
         const account = JSON.parse(account_raw);
 

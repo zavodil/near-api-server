@@ -15,17 +15,28 @@ module.exports = {
         );
     },
 
+    /**
+     * @return {string}
+     */
     MintNFT: async function (tokenId, metadata) {
         let account = await blockchain.GetMasterAccount();
-        return await account.functionCall(
-            settings.nftContract,
-            "nft_mint",
-            {
-                "token_id": tokenId,
-                "metadata": metadata
-            },
-            '100000000000000',
-            '10000000000000000000000');
+        try {
+            const tx = await account.functionCall(
+                settings.nftContract,
+                "nft_mint",
+                {
+                    "token_id": tokenId,
+                    "metadata": metadata
+                },
+                '100000000000000',
+                '10000000000000000000000');
+
+            if (!tx.status.Failure)
+               return tx.transaction.hash
+        }
+        catch (e) {
+            return null;
+        }
     },
 
     TransferNFT: async function (tokenId, receiverId, enforceOwnerId, memo) {

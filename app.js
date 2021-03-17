@@ -2,6 +2,7 @@
 const user = require('./user');
 const token = require('./token');
 const settings = require('./settings');
+const faker = require('faker');
 
 const Hapi = require('@hapi/hapi');
 const bodyParser = require('body-parser');
@@ -12,6 +13,36 @@ const init = async () => {
         port: settings.server_port,
         host: settings.server_host
     });
+
+    function PrecessRequest(request) {
+        Object.keys(request.payload).map((key) => {
+            switch (request.payload[key]) {
+                case "{username}":
+                    request.payload[key] = faker.internet.userName().replace(/[^0-9a-z]/gi, '');
+                    break;
+                case "{color}":
+                    request.payload[key] = faker.internet.color();
+                    break;
+                case "{number}":
+                    request.payload[key] = faker.random.number();
+                    break;
+                case "{word}":
+                    request.payload[key] = faker.random.word();
+                    break;
+                case "{words}":
+                    request.payload[key] = faker.random.words();
+                    break;
+                case "{image}":
+                    request.payload[key] = faker.random.image();
+                    break;
+            }
+
+            if (typeof (request.payload[key]) === "string")
+                request.payload[key] = request.payload[key].toLowerCase();
+        });
+
+        return request;
+    }
 
     server.route({
         method: 'GET',
@@ -33,6 +64,8 @@ const init = async () => {
         method: 'POST',
         path: '/create_user',
         handler: async (request) => {
+            request = PrecessRequest(request);
+
             const name = request.payload.name + "." + settings.masterAccountId;
             let account = await user.CreateKeyPair(name);
 
@@ -42,7 +75,6 @@ const init = async () => {
                 return {text: `Account ${name} created. Public key: ${account.public_key}`};
             else
                 return {text: "Error"};
-
         }
     });
 
@@ -50,6 +82,8 @@ const init = async () => {
         method: 'POST',
         path: '/parse_seed_phrase',
         handler: async (request, h) => {
+            request = PrecessRequest(request);
+
             return await user.GetKeysFromSeedPhrase(request.payload.seed_phrase);
         }
     });
@@ -58,12 +92,28 @@ const init = async () => {
         method: 'POST',
         path: '/mint_nft',
         handler: async (request, h) => {
-            const tokenId = request.payload.token_id;
-            const metadata = request.payload.metadata;
+            let {min, max} = request.payload;
 
-            await token.MintNFT(tokenId, metadata);
+            if (!min || !max)
+                min = max = 0;
+            let response = [];
+            for (let i = min; i <= max; i++) {
+                request = PrecessRequest(request);
+                const tokenId = request.payload.token_id.replace("{inc}", i);
+                const metadata = request.payload.metadata;
 
-            return await token.ViewNFT(tokenId);
+                const tx = await token.MintNFT(tokenId, metadata);
+
+                if (tx) {
+                    let create_token = await token.ViewNFT(tokenId);
+                    create_token.token_id = tokenId;
+                    response.push({token: create_token, tx: tx})
+                } else {
+                    response.push({text: "Error. Check backend logs."});
+                }
+            }
+
+            return response;
         }
     });
 
@@ -71,6 +121,8 @@ const init = async () => {
         method: 'POST',
         path: '/transfer_nft',
         handler: async (request, h) => {
+            request = PrecessRequest(request);
+
             const tokenId = request.payload.token_id;
             const receiverId = request.payload.receiver_id;
             const enforceOwnerId = request.payload.enforce_owner_id;
