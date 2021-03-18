@@ -8,11 +8,15 @@ module.exports = {
      * @return {string}
      */
     ViewNFT: async function (tokenId) {
-        return await blockchain.View(
-            settings.nftContract,
-            "nft_token",
-            {token_id: tokenId}
-        );
+        try {
+            return await blockchain.View(
+                settings.nftContract,
+                "nft_token",
+                {token_id: tokenId}
+            );
+        } catch (e) {
+            console.log(e);
+        }
     },
 
     /**
@@ -32,9 +36,8 @@ module.exports = {
                 '10000000000000000000000');
 
             if (!tx.status.Failure)
-               return tx.transaction.hash
-        }
-        catch (e) {
+                return tx.transaction.hash
+        } catch (e) {
             return null;
         }
     },

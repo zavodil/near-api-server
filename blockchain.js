@@ -7,14 +7,18 @@ module.exports = {
      * @return {string}
      */
     View: async function (recipient, method, params) {
-        const nearRpc = new nearApi.providers.JsonRpcProvider('https://rpc.testnet.near.org');
+        try {
+            const nearRpc = new nearApi.providers.JsonRpcProvider('https://rpc.testnet.near.org');
 
-        const account = new nearApi.Account({provider: nearRpc});
-        return await account.viewFunction(
-            recipient,
-            method,
-            params
-        );
+            const account = new nearApi.Account({provider: nearRpc});
+            return await account.viewFunction(
+                recipient,
+                method,
+                params
+            );
+        } catch (e) {
+            console.log(e);
+        }
     },
 
     GetMasterAccount: async function () {

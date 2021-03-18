@@ -1,6 +1,7 @@
 'use strict';
 const user = require('./user');
 const token = require('./token');
+const blockchain = require('./blockchain');
 const settings = require('./settings');
 const faker = require('faker');
 
@@ -49,6 +50,15 @@ const init = async () => {
         path: '/',
         handler: (request, h) => {
             return 'Hello NEAR API!';
+        }
+    });
+
+    server.route({
+        method: 'POST',
+        path: '/view',
+        handler: async (request, h) => {
+            request = PrecessRequest(request);
+            return await blockchain.View(request.payload.contract, request.payload.method, request.payload.params);
         }
     });
 
