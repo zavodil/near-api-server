@@ -37,9 +37,6 @@ const init = async () => {
                     request.payload[key] = faker.random.image();
                     break;
             }
-
-            if (typeof (request.payload[key]) === "string")
-                request.payload[key] = request.payload[key].toLowerCase();
         });
 
         return request;
@@ -63,6 +60,16 @@ const init = async () => {
     });
 
     server.route({
+        method: 'POST',
+        path: '/call',
+        handler: async (request, h) => {
+            request = PrecessRequest(request);
+            let {account_id, private_key, attached_tokens, attached_gas, contract, method, params} = request.payload;
+            return await blockchain.Call(account_id, private_key, attached_tokens, attached_gas, contract, method, params);
+        }
+    });
+
+    server.route({
         method: 'GET',
         path: '/nft/{token_id}',
         handler: async (request, h) => {
@@ -76,7 +83,7 @@ const init = async () => {
         handler: async (request) => {
             request = PrecessRequest(request);
 
-            const name = request.payload.name + "." + settings.masterAccountId;
+            const name = (request.payload.name + "." + settings.masterAccountId).toLowerCase();
             let account = await user.CreateKeyPair(name);
 
             let status = await user.CreateAccount(account);

@@ -2,6 +2,17 @@
 
 }
 
+.hidden{
+  display: none;
+}
+
+.option-buttons{
+  padding-top: 10px;
+}
+
+.option-buttons input{
+  margin: 0 5px;
+}
 
 @keyframes App-logo-spin {
   from {
