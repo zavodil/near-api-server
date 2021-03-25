@@ -1,7 +1,7 @@
 const CONTRACT_NAME = process.env.CONTRACT_NAME || "dev-1609348608630-8665489";
 
 module.exports = {
-    API_SERVER_URL: "http://testnet.api.nearspace.info:5000",
+    API_SERVER_URL: "https://testnet.api.nearspace.info:5000",
     getConfig: (env) => {
         switch (env) {
 
