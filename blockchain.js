@@ -1,5 +1,6 @@
 const nearApi = require('near-api-js');
 const settings = require('./settings');
+const api = require('./api');
 
 module.exports = {
 
@@ -17,7 +18,7 @@ module.exports = {
                 params
             );
         } catch (e) {
-            console.log(e);
+            return api.reject(e);
         }
     },
 
@@ -46,44 +47,50 @@ module.exports = {
                 attached_gas,
                 attached_tokens);
         } catch (e) {
-            console.log(e);
+            return api.reject(e);
         }
     },
 
     GetMasterAccount: async function () {
-        const keyPair = nearApi.utils.KeyPair.fromString(settings.masterKey);
-        const keyStore = new nearApi.keyStores.InMemoryKeyStore();
-        keyStore.setKey("default", settings.masterAccountId, keyPair);
+        try {
+            const keyPair = nearApi.utils.KeyPair.fromString(settings.masterKey);
+            const keyStore = new nearApi.keyStores.InMemoryKeyStore();
+            keyStore.setKey("default", settings.masterAccountId, keyPair);
 
-        const near = await nearApi.connect({
-            networkId: "default",
-            deps: {keyStore},
-            masterAccount: settings.masterAccountId,
-            nodeUrl: 'https://rpc.testnet.near.org'
-        });
+            const near = await nearApi.connect({
+                networkId: "default",
+                deps: {keyStore},
+                masterAccount: settings.masterAccountId,
+                nodeUrl: 'https://rpc.testnet.near.org'
+            });
 
-        return await near.account(settings.masterAccountId);
+            return await near.account(settings.masterAccountId);
+        } catch (e) {
+            return api.reject(e);
+        }
     },
 
     GetUserAccount: async function (accountId) {
-        const user = require('./user');
+        try {
+            const user = require('./user');
 
-        const account_raw = await user.GetAccount(accountId);
-        const account = JSON.parse(account_raw);
+            const account_raw = await user.GetAccount(accountId);
+            const account = JSON.parse(account_raw);
 
-        const keyPair = nearApi.utils.KeyPair.fromString(account.private_key);
-        const keyStore = new nearApi.keyStores.InMemoryKeyStore();
-        keyStore.setKey("default", account.account_id, keyPair);
+            const keyPair = nearApi.utils.KeyPair.fromString(account.private_key);
+            const keyStore = new nearApi.keyStores.InMemoryKeyStore();
+            keyStore.setKey("default", account.account_id, keyPair);
 
-        const near = await nearApi.connect({
-            networkId: "default",
-            deps: {keyStore},
-            masterAccount: account.account_id,
-            nodeUrl: 'https://rpc.testnet.near.org'
-        });
+            const near = await nearApi.connect({
+                networkId: "default",
+                deps: {keyStore},
+                masterAccount: account.account_id,
+                nodeUrl: 'https://rpc.testnet.near.org'
+            });
 
-        return await near.account(account.account_id);
+            return await near.account(account.account_id);
+        } catch (e) {
+            return api.reject(e);
+        }
     }
-
-
 };

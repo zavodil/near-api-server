@@ -146,9 +146,18 @@ const init = async () => {
             const enforceOwnerId = request.payload.enforce_owner_id;
             const memo = request.payload.memo;
 
-            await token.TransferNFT(tokenId, receiverId, enforceOwnerId, memo);
+            const txStatus = await token.TransferNFT(tokenId, receiverId, enforceOwnerId, memo);
 
-            return await token.ViewNFT(tokenId);
+            if(txStatus.error){
+                return txStatus;
+            }
+            else if (txStatus.status.Failure) {
+                return {error: "Because of some reason transaction was not applied as expected"}
+            } else {
+                const new_token = await token.ViewNFT(tokenId);
+                new_token.tx = txStatus.transaction.hash;
+                return new_token;
+            }
         }
     });
 

@@ -1,6 +1,7 @@
 const nearApi = require('near-api-js');
 const blockchain = require('./blockchain');
 const settings = require('./settings');
+const api = require('./api');
 
 module.exports = {
 
@@ -15,7 +16,7 @@ module.exports = {
                 {token_id: tokenId}
             );
         } catch (e) {
-            console.log(e);
+            return api.reject(e);
         }
     },
 
@@ -38,28 +39,32 @@ module.exports = {
             if (!tx.status.Failure)
                 return tx.transaction.hash
         } catch (e) {
-            return null;
+            return api.reject(e);
         }
     },
 
     TransferNFT: async function (tokenId, receiverId, enforceOwnerId, memo) {
-        let account;
-        if (enforceOwnerId === settings.masterAccountId) {
-            account = await blockchain.GetMasterAccount();
-        } else {
-            account = await blockchain.GetUserAccount(enforceOwnerId);
-        }
+        try {
+            let account;
+            if (enforceOwnerId === settings.masterAccountId) {
+                account = await blockchain.GetMasterAccount();
+            } else {
+                account = await blockchain.GetUserAccount(enforceOwnerId);
+            }
 
-        return await account.functionCall(
-            settings.nftContract,
-            "nft_transfer",
-            {
-                "token_id": tokenId,
-                "receiver_id": receiverId,
-                "enforce_owner_id": enforceOwnerId,
-                "memo": memo
-            },
-            '100000000000000',
-            '1');
+            return await account.functionCall(
+                settings.nftContract,
+                "nft_transfer",
+                {
+                    "token_id": tokenId,
+                    "receiver_id": receiverId,
+                    "enforce_owner_id": enforceOwnerId,
+                    "memo": memo
+                },
+                '100000000000000',
+                '1');
+        } catch (e) {
+            return api.reject(e);
+        }
     }
 };
