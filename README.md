@@ -86,11 +86,11 @@ POST `call`
 ```
 {
 	"account_id": "YOUR_ACCOUNT.testnet",
-	"private_key": "YOUR_ACCOUNT_PRIVATE_KEY",	
+	"private_key": "YOUR_PRIVATE_KEY",	
 	"contract": "inotel.pool.f863973.m0",
 	"method": "ping",
 	"params": {},
-    "attached_gas": "100000000000000",
+	"attached_gas": "100000000000000",
 	"attached_tokens": "0"
 }
 ```
