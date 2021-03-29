@@ -73,9 +73,9 @@ Generic view
 POST `view`
 ```
 {
-	"contract": "inotel.pool.f863973.m0",
-	"method": "get_accounts",
-	"params": {"from_index": 0, "limit": 100}
+    "contract": "inotel.pool.f863973.m0",
+    "method": "get_accounts",
+    "params": {"from_index": 0, "limit": 100}
 }
 ```
 
@@ -85,36 +85,64 @@ Generic call
 POST `call`
 ```
 {
-	"account_id": "YOUR_ACCOUNT.testnet",
-	"private_key": "YOUR_PRIVATE_KEY",	
-	"contract": "inotel.pool.f863973.m0",
-	"method": "ping",
-	"params": {},
-	"attached_gas": "100000000000000",
-	"attached_tokens": "0"
+    "account_id": "YOUR_ACCOUNT.testnet",
+    "private_key": "YOUR_PRIVATE_KEY",	
+    "contract": "inotel.pool.f863973.m0",
+    "method": "ping",
+    "params": {},
+    "attached_gas": "100000000000000",
+    "attached_tokens": "0"
 }
 ```
 
-Mint NFT Token. 
+Deploy contract
+---
+
+POST `call`
+```
+{
+    "account_id": "YOUR_ACCOUNT.testnet",
+    "private_key": "YOUR_PRIVATE_KEY",	
+    "contract": "nft_simple.wasm"
+}
+```
+
+`contract` - filename of the wasm binary located in the `/contracts` folder, auto init for `nft_simple.wasm`
+
+Mint NFT Token (simple)
 ---
 
 POST `mint_nft`
 ```
 {
-	"token_id": "007",
-	"metadata": "Golden Eye"	
+    "token_id": "007",
+    "metadata": "Golden Eye"	
 }
 ```
 Original token owner is `YOUR_ACCOUNT.testnet`
 
-Batch NFT minting 
-
+Generic NFT minting 
+---
 ```
 {
-	"token_id": "test_{inc}",
-	"metadata": "",
-	"min": 21,
-	"max": 23
+    "token_id": "test_123",
+    "metadata": "",
+    "account_id": "YOUR_ACCOUNT.testnet",
+    "private_key": "YOUR_PRIVATE_KEY",	
+    "contract": "nft.something.near",	    
+}
+```
+
+Mints NFT using specified `contract` on behalf of provided `account_id`.
+
+Batch NFT minting 
+---
+```
+{
+    "token_id": "test_{inc}",
+    "metadata": "",    
+    "min": 21,
+    "max": 23
 }
 ```
 
@@ -126,7 +154,7 @@ POST `create_user`
 
 ```
 {
-	"name" : "james"
+    "name" : "james"
 }
 ```
 Transfer NFT
@@ -135,26 +163,47 @@ Transfer NFT
 POST `transfer_nft`
 ```
 {
-	"token_id": "007",
-	"receiver_id": "james.YOUR_ACCOUNT.testnet",
-	"enforce_owner_id": "YOUR_ACCOUNT.testnet",
-	"memo": "Welcome gift"	
+    "token_id": "007",
+    "receiver_id": "james.YOUR_ACCOUNT.testnet",
+    "enforce_owner_id": "YOUR_ACCOUNT.testnet",
+    "memo": "Welcome gift"	
 }
 ```
 
-View NFT
+View NFT (simple)
 ---
 
 GET `nft/{token_id}`
 
-Receive information about token owner
+Receive information about NFT
+
+Generic view NFT
+---
+```
+{
+	"token_id": "test_123",
+	"contract": "nft.something.near"
+}
+```
+
+Transfer NFT
+---
+POST `transfer_nft`
+```
+{
+    "token_id": "007",
+    "receiver_id": "james.YOUR_ACCOUNT.testnet",
+    "enforce_owner_id": "YOUR_ACCOUNT.testnet",
+    "memo": "Welcome gift"	
+}
+```
 
 Parse Seed Phrase
 ---
 POST `parse_seed_phrase`
 ```
 {
-	"seed_phrase" : "your seed phrase your seed phrase your seed phrase your seed phrase"
+    "seed_phrase" : "your seed phrase your seed phrase your seed phrase your seed phrase"
 }
 ```
 
