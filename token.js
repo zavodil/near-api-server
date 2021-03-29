@@ -8,10 +8,11 @@ module.exports = {
     /**
      * @return {string}
      */
-    ViewNFT: async function (tokenId) {
+    ViewNFT: async function (tokenId, contract) {
         try {
+            const nftContract = contract ? contract :  settings.nftContract;
             return await blockchain.View(
-                settings.nftContract,
+                nftContract,
                 "nft_token",
                 {token_id: tokenId}
             );
@@ -23,11 +24,17 @@ module.exports = {
     /**
      * @return {string}
      */
-    MintNFT: async function (tokenId, metadata) {
-        let account = await blockchain.GetMasterAccount();
+    MintNFT: async function (tokenId, metadata, contractAccountId, account_id, private_key) {
+        const nftContract = contractAccountId ? contractAccountId : settings.nftContract;
+
+
+        let account = !(account_id && private_key)
+            ? await blockchain.GetMasterAccount()
+            : await blockchain.GetAccountByKey(account_id, private_key);
+
         try {
             const tx = await account.functionCall(
-                settings.nftContract,
+                nftContract,
                 "nft_mint",
                 {
                     "token_id": tokenId,

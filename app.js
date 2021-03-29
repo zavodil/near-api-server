@@ -45,15 +45,15 @@ const init = async () => {
     server.route({
         method: 'GET',
         path: '/',
-        handler: (request, h) => {
-            return 'Hello NEAR API!';
+        handler: () => {
+            return 'Welcome to NEAR API!';
         }
     });
 
     server.route({
         method: 'POST',
         path: '/view',
-        handler: async (request, h) => {
+        handler: async (request) => {
             request = PrecessRequest(request);
             return await blockchain.View(request.payload.contract, request.payload.method, request.payload.params);
         }
@@ -62,7 +62,7 @@ const init = async () => {
     server.route({
         method: 'POST',
         path: '/call',
-        handler: async (request, h) => {
+        handler: async (request) => {
             request = PrecessRequest(request);
             let {account_id, private_key, attached_tokens, attached_gas, contract, method, params} = request.payload;
             return await blockchain.Call(account_id, private_key, attached_tokens, attached_gas, contract, method, params);
@@ -70,10 +70,29 @@ const init = async () => {
     });
 
     server.route({
+        method: 'POST',
+        path: '/deploy',
+        handler: async (request) => {
+            request = PrecessRequest(request);
+            let {account_id, private_key, contract} = request.payload;
+            return await blockchain.DeployContract(account_id, private_key, contract);
+        }
+    });
+
+
+    server.route({
         method: 'GET',
         path: '/nft/{token_id}',
-        handler: async (request, h) => {
+        handler: async (request) => {
             return await token.ViewNFT(request.params.token_id);
+        }
+    });
+
+    server.route({
+        method: 'POST',
+        path: '/nft/',
+        handler: async (request) => {
+            return await token.ViewNFT(request.payload.token_id, request.payload.contract);
         }
     });
 
@@ -108,7 +127,7 @@ const init = async () => {
     server.route({
         method: 'POST',
         path: '/mint_nft',
-        handler: async (request, h) => {
+        handler: async (request) => {
             let {min, max} = request.payload;
 
             if (!min || !max)
@@ -118,14 +137,20 @@ const init = async () => {
             request = PrecessRequest(request);
             for (let i = min; i <= max; i++) {
                 const tokenId = request.payload.token_id.replace("{inc}", i);
-                const metadata = request.payload.metadata;
 
-                const tx = await token.MintNFT(tokenId, metadata);
+                let {account_id, private_key, metadata, contract} = request.payload;
+
+                const tx = await token.MintNFT(tokenId, metadata, contract, account_id, private_key);
 
                 if (tx) {
-                    let create_token = await token.ViewNFT(tokenId);
-                    create_token.token_id = tokenId;
-                    response.push({token: create_token, tx: tx})
+                    if(min === max) {
+                        let create_token = await token.ViewNFT(tokenId, account_id);
+                        create_token.token_id = tokenId;
+                        response.push({token: create_token, tx: tx})
+                    }
+                    else{
+                        response.push({tx: tx})
+                    }
                 } else {
                     response.push({text: "Error. Check backend logs."});
                 }
