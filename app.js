@@ -3,6 +3,7 @@ const user = require('./user');
 const token = require('./token');
 const blockchain = require('./blockchain');
 const settings = require('./settings');
+const api = require('./api');
 const faker = require('faker');
 
 const Hapi = require('@hapi/hapi');
@@ -166,12 +167,9 @@ const init = async () => {
         handler: async (request, h) => {
             request = PrecessRequest(request);
 
-            const tokenId = request.payload.token_id;
-            const receiverId = request.payload.receiver_id;
-            const enforceOwnerId = request.payload.enforce_owner_id;
-            const memo = request.payload.memo;
+            let {token_id, receiver_id, enforce_owner_id, memo, contract, account_id, private_key} = request.payload;
 
-            const txStatus = await token.TransferNFT(tokenId, receiverId, enforceOwnerId, memo);
+            const txStatus = await token.TransferNFT(token_id, receiver_id, enforce_owner_id, memo, contract, account_id, private_key);
 
             if(txStatus.error){
                 return txStatus;
@@ -179,7 +177,10 @@ const init = async () => {
             else if (txStatus.status.Failure) {
                 return {error: "Because of some reason transaction was not applied as expected"}
             } else {
-                const new_token = await token.ViewNFT(tokenId);
+                const new_token = await token.ViewNFT(token_id, contract);
+                if(!new_token)
+                    return api.reject("Token not found");
+
                 new_token.tx = txStatus.transaction.hash;
                 return new_token;
             }

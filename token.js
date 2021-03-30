@@ -10,7 +10,7 @@ module.exports = {
      */
     ViewNFT: async function (tokenId, contract) {
         try {
-            const nftContract = contract ? contract :  settings.nftContract;
+            const nftContract = contract ? contract : settings.nftContract;
             return await blockchain.View(
                 nftContract,
                 "nft_token",
@@ -26,7 +26,6 @@ module.exports = {
      */
     MintNFT: async function (tokenId, metadata, contractAccountId, account_id, private_key) {
         const nftContract = contractAccountId ? contractAccountId : settings.nftContract;
-
 
         let account = !(account_id && private_key)
             ? await blockchain.GetMasterAccount()
@@ -50,17 +49,21 @@ module.exports = {
         }
     },
 
-    TransferNFT: async function (tokenId, receiverId, enforceOwnerId, memo) {
+    TransferNFT: async function (tokenId, receiverId, enforceOwnerId, memo, contractAccountId, account_id, private_key) {
         try {
+            const nftContract = contractAccountId ? contractAccountId : settings.nftContract;
             let account;
-            if (enforceOwnerId === settings.masterAccountId) {
-                account = await blockchain.GetMasterAccount();
-            } else {
-                account = await blockchain.GetUserAccount(enforceOwnerId);
-            }
+
+            account = !(account_id && private_key)
+                ? (
+                    (enforceOwnerId === settings.masterAccountId)
+                        ? await blockchain.GetMasterAccount()
+                        : await blockchain.GetUserAccount(enforceOwnerId)
+                )
+                : await blockchain.GetAccountByKey(account_id, private_key);
 
             return await account.functionCall(
-                settings.nftContract,
+                nftContract,
                 "nft_transfer",
                 {
                     "token_id": tokenId,
