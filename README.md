@@ -157,7 +157,7 @@ POST `create_user`
     "name" : "james"
 }
 ```
-Transfer NFT
+Transfer NFT (simple)
 ---
 
 POST `transfer_nft`
@@ -169,6 +169,22 @@ POST `transfer_nft`
     "memo": "Welcome gift"	
 }
 ```
+
+Generic Transfer NFT
+---
+
+POST `transfer_nft`
+```
+{
+    "token_id": "007",
+    "receiver_id": "james.YOUR_ACCOUNT.testnet",
+    "enforce_owner_id": "YOUR_ACCOUNT.testnet",
+    "memo": "Welcome gift",	
+    "owner_private_key": "YOUR_PRIVATE_KEY",	
+    "contract": "nft.something.near"	    
+}
+```
+Transfer NFT from specified `contract` on behalf of provided `enforce_owner_id` signed with `owner_private_key`.
 
 View NFT (simple)
 ---

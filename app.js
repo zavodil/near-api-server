@@ -167,9 +167,9 @@ const init = async () => {
         handler: async (request, h) => {
             request = PrecessRequest(request);
 
-            let {token_id, receiver_id, enforce_owner_id, memo, contract, account_id, private_key} = request.payload;
+            let {token_id, receiver_id, enforce_owner_id, memo, contract, owner_private_key} = request.payload;
 
-            const txStatus = await token.TransferNFT(token_id, receiver_id, enforce_owner_id, memo, contract, account_id, private_key);
+            const txStatus = await token.TransferNFT(token_id, receiver_id, enforce_owner_id, memo, contract, owner_private_key);
 
             if(txStatus.error){
                 return txStatus;
