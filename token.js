@@ -1,7 +1,9 @@
 const nearApi = require('near-api-js');
 const blockchain = require('./blockchain');
-const settings = require('./settings');
 const api = require('./api');
+
+const fs = require('fs');
+const settings = JSON.parse(fs.readFileSync('settings.json', 'utf8'));
 
 module.exports = {
 
@@ -10,7 +12,7 @@ module.exports = {
      */
     ViewNFT: async function (tokenId, contract) {
         try {
-            const nftContract = contract ? contract : settings.nftContract;
+            const nftContract = contract ? contract : settings.nft_contract;
             return await blockchain.View(
                 nftContract,
                 "nft_token",
@@ -25,7 +27,7 @@ module.exports = {
      * @return {string}
      */
     MintNFT: async function (tokenId, metadata, contractAccountId, account_id, private_key) {
-        const nftContract = contractAccountId ? contractAccountId : settings.nftContract;
+        const nftContract = contractAccountId ? contractAccountId : settings.nft_contract;
 
         let account = !(account_id && private_key)
             ? await blockchain.GetMasterAccount()
@@ -51,11 +53,11 @@ module.exports = {
 
     TransferNFT: async function (tokenId, receiverId, enforceOwnerId, memo, contractAccountId, owner_private_key) {
         try {
-            const nftContract = contractAccountId ? contractAccountId : settings.nftContract;
+            const nftContract = contractAccountId ? contractAccountId : settings.nft_contract;
             let account;
 
             account = !(enforceOwnerId && owner_private_key)
-                ? ((enforceOwnerId === settings.masterAccountId)
+                ? ((enforceOwnerId === settings.master_account_id)
                     ? await blockchain.GetMasterAccount()
                     : await blockchain.GetUserAccount(enforceOwnerId))
                 : await blockchain.GetAccountByKey(enforceOwnerId, owner_private_key);

@@ -39,11 +39,8 @@ Follow provided link and grant an access using the web wallet, then comeback to 
 
 ###### Configure API Server
 
-Clone this repo, go to the application folder and edit config.js file.
+Clone this repo, go to the application folder and edit settings.json file.
 
-* masterAccountId: `YOUR_ACCOUNT.testnet`
-* exports.masterKey: account private key. Copy from `/root/.near-credentials/default` or call `/parse_seed_phrase` from NEAR API  
-* nftContract: `nft.YOUR_ACCOUNT.testnet`
 * server_host: `PUBLIC_IP`
 * server_port: `PORT`
 
@@ -95,10 +92,31 @@ POST `call`
 }
 ```
 
+Init Master Account
+---
+Simple methods require master account initialization:
+ 
+POST `init`
+ ```
+ {
+    "master_account_id": YOUR_ACCOUNT.testnet",
+    "seed_phrase":  "your seed phrase your seed phrase your seed phrase your seed phrase",    
+    "nft_contract": "NFT_CONTRACT", 
+    "server_host": "PUBLIC_IP",
+    "server_port": "PORT",
+    "rpc_node": "https://rpc.testnet.near.org"
+ }
+ ```
+
+`NFT_CONTRACT`: account where you will deploy a contract. You may use `YOUR_ACCOUNT.testnet`
+
+You may optionally specify `master_key` instead of `seed_phrase`
+
+
 Deploy contract
 ---
 
-POST `call`
+POST `deploy`
 ```
 {
     "account_id": "YOUR_ACCOUNT.testnet",
@@ -108,6 +126,7 @@ POST `call`
 ```
 
 `contract` - filename of the wasm binary located in the `/contracts` folder, auto init for `nft_simple.wasm`
+
 
 Mint NFT Token (simple)
 ---
@@ -120,6 +139,19 @@ POST `mint_nft`
 }
 ```
 Original token owner is `YOUR_ACCOUNT.testnet`
+
+Batch NFT minting (simple)
+---
+```
+{
+    "token_id": "test_{inc}",
+    "metadata": "",    
+    "min": 21,
+    "max": 23
+}
+```
+
+This will create 3 NFTs: `test_21`, `test_22` and `test_23`
 
 Generic NFT minting 
 ---
@@ -134,19 +166,6 @@ Generic NFT minting
 ```
 
 Mints NFT using specified `contract` on behalf of provided `account_id`.
-
-Batch NFT minting 
----
-```
-{
-    "token_id": "test_{inc}",
-    "metadata": "",    
-    "min": 21,
-    "max": 23
-}
-```
-
-This will create 3 NFTs: `test_21`, `test_22` and `test_23`
 
 Create user
 ---

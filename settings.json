@@ -1,0 +1,5 @@
+{
+    "server_host": "PUBLIC_IP",
+    "server_port": "PORT",
+    "rpc_node": "https://rpc.testnet.near.org"
+}

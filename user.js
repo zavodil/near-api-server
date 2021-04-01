@@ -1,8 +1,6 @@
 const nearApi = require('near-api-js');
-const settings = require('./settings');
 const blockchain = require('./blockchain');
 const nearSeedPhrase = require('near-seed-phrase');
-
 const fs = require('fs');
 
 const storageFolder = "storage";

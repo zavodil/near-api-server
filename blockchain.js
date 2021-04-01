@@ -1,7 +1,8 @@
 const nearApi = require('near-api-js');
-const settings = require('./settings');
 const api = require('./api');
 const fs = require('fs');
+
+const settings = JSON.parse(fs.readFileSync('settings.json', 'utf8'));
 
 module.exports = {
 
@@ -10,7 +11,7 @@ module.exports = {
      */
     View: async function (recipient, method, params) {
         try {
-            const nearRpc = new nearApi.providers.JsonRpcProvider(settings.rpcNode);
+            const nearRpc = new nearApi.providers.JsonRpcProvider(settings.rpc_node);
 
             const account = new nearApi.Account({provider: nearRpc});
             return await account.viewFunction(
@@ -18,6 +19,26 @@ module.exports = {
                 method,
                 params
             );
+        } catch (e) {
+            return api.reject(e);
+        }
+    },
+
+    Init: async function (master_account_id, master_key, nft_contract, server_host, server_port, rpc_node){
+        try{
+          if(rpc_node !== "https://rpc.testnet.near.org")
+              return api.reject("Please use mainnet accounts only on your own instance for security reasons. Remove this check if you have access");
+
+            await fs.promises.writeFile("settings.json", JSON.stringify({
+                "master_account_id": master_account_id,
+                "master_key": master_key,
+                "nft_contract": nft_contract,
+                "server_host": server_host,
+                "server_port": server_port,
+                "rpc_node": rpc_node
+            }));
+
+            return api.notify("Settings updated. Restarting...");
         } catch (e) {
             return api.reject(e);
         }
@@ -63,18 +84,18 @@ module.exports = {
 
     GetMasterAccount: async function () {
         try {
-            const keyPair = nearApi.utils.KeyPair.fromString(settings.masterKey);
+            const keyPair = nearApi.utils.KeyPair.fromString(settings.master_key);
             const keyStore = new nearApi.keyStores.InMemoryKeyStore();
-            keyStore.setKey("default", settings.masterAccountId, keyPair);
+            keyStore.setKey("default", settings.master_account_id, keyPair);
 
             const near = await nearApi.connect({
                 networkId: "default",
                 deps: {keyStore},
-                masterAccount: settings.masterAccountId,
-                nodeUrl: settings.rpcNode
+                masterAccount: settings.master_account_id,
+                nodeUrl: settings.rpc_node
             });
 
-            return await near.account(settings.masterAccountId);
+            return await near.account(settings.master_account_id);
         } catch (e) {
             return api.reject(e);
         }
@@ -95,7 +116,7 @@ module.exports = {
                 networkId: "default",
                 deps: {keyStore},
                 masterAccount: account.account_id,
-                nodeUrl: settings.rpcNode
+                nodeUrl: settings.rpc_node
             });
 
             return await near.account(account.account_id);
@@ -116,7 +137,7 @@ module.exports = {
                 networkId: "default",
                 deps: {keyStore},
                 masterAccount: account_id,
-                nodeUrl: settings.rpcNode
+                nodeUrl: settings.rpc_node
             });
 
             return await near.account(account_id);

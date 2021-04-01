@@ -2,12 +2,14 @@
 const user = require('./user');
 const token = require('./token');
 const blockchain = require('./blockchain');
-const settings = require('./settings');
 const api = require('./api');
 const faker = require('faker');
 
 const Hapi = require('@hapi/hapi');
 const bodyParser = require('body-parser');
+let fs = require('fs');
+
+const settings = JSON.parse(fs.readFileSync('settings.json', 'utf8'));
 
 const init = async () => {
 
@@ -47,7 +49,10 @@ const init = async () => {
         method: 'GET',
         path: '/',
         handler: () => {
-            return 'Welcome to NEAR API!';
+            return api.notify('Welcome to NEAR API! ' +
+                (!settings.master_account_id
+                    ? "Please initialize your NEAR account in order to use simple nft mint/transfer methods"
+                    : `Master Account: ${settings.master_account_id}`));
         }
     });
 
@@ -67,6 +72,30 @@ const init = async () => {
             request = PrecessRequest(request);
             let {account_id, private_key, attached_tokens, attached_gas, contract, method, params} = request.payload;
             return await blockchain.Call(account_id, private_key, attached_tokens, attached_gas, contract, method, params);
+        }
+    });
+
+    server.route({
+        method: 'POST',
+        path: '/init',
+        handler: async (request) => {
+            request = PrecessRequest(request);
+            let {master_account_id, seed_phrase, master_key, nft_contract, server_host, server_port, rpc_node} = request.payload;
+
+            if(seed_phrase)
+                master_key =  (await user.GetKeysFromSeedPhrase(request.payload.seed_phrase)).secretKey;
+
+            let response = await blockchain.Init(master_account_id, master_key, nft_contract, server_host, server_port, rpc_node);
+            if (!response.error) {
+                process.on('SIGINT', function () {
+                    console.log('stopping server...')
+                    server.stop({ timeout: 1000 }).then(async function (err) {
+                        await server.start();
+                    })
+                })
+            }
+
+            return response;
         }
     });
 
@@ -103,7 +132,7 @@ const init = async () => {
         handler: async (request) => {
             request = PrecessRequest(request);
 
-            const name = (request.payload.name + "." + settings.masterAccountId).toLowerCase();
+            const name = (request.payload.name + "." + settings.master_account_id).toLowerCase();
             let account = await user.CreateKeyPair(name);
 
             let status = await user.CreateAccount(account);
@@ -144,12 +173,11 @@ const init = async () => {
                 const tx = await token.MintNFT(tokenId, metadata, contract, account_id, private_key);
 
                 if (tx) {
-                    if(min === max) {
+                    if (min === max) {
                         let create_token = await token.ViewNFT(tokenId, account_id);
                         create_token.token_id = tokenId;
                         response.push({token: create_token, tx: tx})
-                    }
-                    else{
+                    } else {
                         response.push({tx: tx})
                     }
                 } else {
@@ -171,14 +199,13 @@ const init = async () => {
 
             const txStatus = await token.TransferNFT(token_id, receiver_id, enforce_owner_id, memo, contract, owner_private_key);
 
-            if(txStatus.error){
+            if (txStatus.error) {
                 return txStatus;
-            }
-            else if (txStatus.status.Failure) {
+            } else if (txStatus.status.Failure) {
                 return {error: "Because of some reason transaction was not applied as expected"}
             } else {
                 const new_token = await token.ViewNFT(token_id, contract);
-                if(!new_token)
+                if (!new_token)
                     return api.reject("Token not found");
 
                 new_token.tx = txStatus.transaction.hash;
