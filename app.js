@@ -80,12 +80,12 @@ const init = async () => {
         path: '/init',
         handler: async (request) => {
             request = PrecessRequest(request);
-            let {master_account_id, seed_phrase, master_key, nft_contract, server_host, server_port, rpc_node} = request.payload;
+            let {master_account_id, seed_phrase, private_key, nft_contract, server_host, server_port, rpc_node} = request.payload;
 
             if(seed_phrase)
-                master_key =  (await user.GetKeysFromSeedPhrase(request.payload.seed_phrase)).secretKey;
+                private_key =  (await user.GetKeysFromSeedPhrase(seed_phrase)).secretKey;
 
-            let response = await blockchain.Init(master_account_id, master_key, nft_contract, server_host, server_port, rpc_node);
+            let response = await blockchain.Init(master_account_id, private_key, nft_contract, server_host, server_port, rpc_node);
             if (!response.error) {
                 process.on('SIGINT', function () {
                     console.log('stopping server...')
@@ -104,7 +104,11 @@ const init = async () => {
         path: '/deploy',
         handler: async (request) => {
             request = PrecessRequest(request);
-            let {account_id, private_key, contract} = request.payload;
+            let {account_id, private_key, seed_phrase, contract} = request.payload;
+
+            if(seed_phrase)
+                private_key =  (await user.GetKeysFromSeedPhrase(seed_phrase)).secretKey;
+
             return await blockchain.DeployContract(account_id, private_key, contract);
         }
     });

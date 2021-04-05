@@ -54,7 +54,7 @@ POST `init`
 
 `NFT_CONTRACT`: account where you will deploy a contract. You may use `YOUR_ACCOUNT.testnet`
 
-You may optionally specify `master_key` instead of `seed_phrase`
+You may optionally specify `private_key` instead of `seed_phrase`
 
 
 Deploy contract
@@ -64,12 +64,14 @@ POST `deploy`
 ```
 {
     "account_id": "YOUR_ACCOUNT.testnet",
-    "private_key": "YOUR_PRIVATE_KEY",	
+    "seed_phrase":  "your seed phrase your seed phrase your seed phrase your seed phrase",
     "contract": "nft_simple.wasm"
 }
 ```
 
 `contract` - filename of the wasm binary located in the `/contracts` folder, auto init for `nft_simple.wasm`
+
+You may optionally specify `private_key` instead of `seed_phrase`
 
 ## Available methods
 
