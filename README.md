@@ -36,38 +36,6 @@ Clone this repo, go to the application folder and edit settings.json file.
 
 NEAR API server will be available on `http://PUBLIC_IP:PORT`
 
-## Available methods
-
-Send requests using Postman/Insomnia/etc
-
-Generic view
----
-
-POST `view`
-```
-{
-    "contract": "inotel.pool.f863973.m0",
-    "method": "get_accounts",
-    "params": {"from_index": 0, "limit": 100}
-}
-```
-
-Generic call
----
-
-POST `call`
-```
-{
-    "account_id": "YOUR_ACCOUNT.testnet",
-    "private_key": "YOUR_PRIVATE_KEY",	
-    "contract": "inotel.pool.f863973.m0",
-    "method": "ping",
-    "params": {},
-    "attached_gas": "100000000000000",
-    "attached_tokens": "0"
-}
-```
-
 Init Master Account
 ---
 Simple methods require master account initialization:
@@ -103,6 +71,37 @@ POST `deploy`
 
 `contract` - filename of the wasm binary located in the `/contracts` folder, auto init for `nft_simple.wasm`
 
+## Available methods
+
+Send requests using Postman/Insomnia/etc
+
+Generic view
+---
+
+POST `view`
+```
+{
+    "contract": "inotel.pool.f863973.m0",
+    "method": "get_accounts",
+    "params": {"from_index": 0, "limit": 100}
+}
+```
+
+Generic call
+---
+
+POST `call`
+```
+{
+    "account_id": "YOUR_ACCOUNT.testnet",
+    "private_key": "YOUR_PRIVATE_KEY",	
+    "contract": "inotel.pool.f863973.m0",
+    "method": "ping",
+    "params": {},
+    "attached_gas": "100000000000000",
+    "attached_tokens": "0"
+}
+```
 
 Mint NFT Token (simple)
 ---
