@@ -189,6 +189,9 @@ Receive information about NFT
 
 Generic view NFT
 ---
+
+POST `nft`
+
 ```
 {
 	"token_id": "test_123",
