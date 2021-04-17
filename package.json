@@ -1,5 +1,5 @@
 {
-  "name": "near-api",
+  "name": "near-api-server",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -14,5 +14,8 @@
     "near-api-js": "~0.38.0",
     "near-seed-phrase": "^0.1.0",
     "faker": "~5.4.0"
+  },
+  "bin": {
+    "near-api-server": "./app.js"
   }
 }
