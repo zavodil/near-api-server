@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 'use strict';
 const user = require('./user');
 const token = require('./token');
@@ -228,3 +230,4 @@ process.on('unhandledRejection', (err) => {
 });
 
 init();
+
