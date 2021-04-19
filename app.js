@@ -11,7 +11,7 @@ const Hapi = require('@hapi/hapi');
 const bodyParser = require('body-parser');
 let fs = require('fs');
 
-const settings = JSON.parse(fs.readFileSync('settings.json', 'utf8'));
+const settings = JSON.parse(fs.readFileSync(blockchain.CONFIG_PATH, 'utf8'));
 
 const init = async () => {
 

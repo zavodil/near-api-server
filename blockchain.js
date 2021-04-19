@@ -7,6 +7,8 @@ const settings = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
 
 module.exports = {
 
+    CONFIG_PATH,
+
     /**
      * @return {string}
      */

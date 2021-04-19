@@ -3,7 +3,7 @@ const blockchain = require('./blockchain');
 const api = require('./api');
 
 const fs = require('fs');
-const settings = JSON.parse(fs.readFileSync('settings.json', 'utf8'));
+const settings = JSON.parse(fs.readFileSync(blockchain.CONFIG_PATH, 'utf8'));
 
 module.exports = {
 
