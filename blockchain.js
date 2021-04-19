@@ -2,7 +2,8 @@ const nearApi = require('near-api-js');
 const api = require('./api');
 const fs = require('fs');
 
-const settings = JSON.parse(fs.readFileSync('settings.json', 'utf8'));
+const CONFIG_PATH = './near-api-server.config.json';
+const settings = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
 
 module.exports = {
 
@@ -29,7 +30,7 @@ module.exports = {
           if(rpc_node !== "https://rpc.testnet.near.org")
               return api.reject("Please use mainnet accounts only on your own instance for security reasons. Remove this check if you have access");
 
-            await fs.promises.writeFile("settings.json", JSON.stringify({
+            await fs.promises.writeFile(CONFIG_PATH, JSON.stringify({
                 "master_account_id": master_account_id,
                 "master_key": master_key,
                 "nft_contract": nft_contract,
