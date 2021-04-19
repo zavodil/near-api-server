@@ -1,9 +1,8 @@
-const nearApi = require('near-api-js');
 const blockchain = require('./blockchain');
 const api = require('./api');
 
 const fs = require('fs');
-const settings = JSON.parse(fs.readFileSync(blockchain.CONFIG_PATH, 'utf8'));
+const settings = JSON.parse(fs.readFileSync(api.CONFIG_PATH, 'utf8'));
 
 module.exports = {
 

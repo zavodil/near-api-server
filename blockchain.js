@@ -2,13 +2,9 @@ const nearApi = require('near-api-js');
 const api = require('./api');
 const fs = require('fs');
 
-const CONFIG_PATH = './near-api-server.config.json';
-const settings = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
+const settings = JSON.parse(fs.readFileSync(api.CONFIG_PATH, 'utf8'));
 
 module.exports = {
-
-    CONFIG_PATH,
-
     /**
      * @return {string}
      */
@@ -29,10 +25,11 @@ module.exports = {
 
     Init: async function (master_account_id, master_key, nft_contract, server_host, server_port, rpc_node){
         try{
-          if(rpc_node !== "https://rpc.testnet.near.org")
-              return api.reject("Please use mainnet accounts only on your own instance for security reasons. Remove this check if you have access");
+          if(!settings.allow_rpc_update && rpc_node !== settings.rpc_node)
+              return api.reject("RPC update restricted. Please update config if you have access");
 
-            await fs.promises.writeFile(CONFIG_PATH, JSON.stringify({
+            await fs.promises.writeFile(api.CONFIG_PATH, JSON.stringify({
+                ...settings,
                 "master_account_id": master_account_id,
                 "master_key": master_key,
                 "nft_contract": nft_contract,
@@ -41,7 +38,7 @@ module.exports = {
                 "rpc_node": rpc_node
             }));
 
-            return api.notify("Settings updated. Restarting...");
+            return api.notify("Settings updated.");
         } catch (e) {
             return api.reject(e);
         }

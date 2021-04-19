@@ -8,10 +8,10 @@ const api = require('./api');
 const faker = require('faker');
 
 const Hapi = require('@hapi/hapi');
-const bodyParser = require('body-parser');
 let fs = require('fs');
 
-const settings = JSON.parse(fs.readFileSync(blockchain.CONFIG_PATH, 'utf8'));
+
+const settings = JSON.parse(fs.readFileSync(api.CONFIG_PATH, 'utf8'));
 
 const init = async () => {
 
@@ -90,8 +90,8 @@ const init = async () => {
             let response = await blockchain.Init(master_account_id, private_key, nft_contract, server_host, server_port, rpc_node);
             if (!response.error) {
                 process.on('SIGINT', function () {
-                    console.log('stopping server...')
-                    server.stop({ timeout: 1000 }).then(async function (err) {
+                    console.log('Stopping server...');
+                    server.stop({ timeout: 1000 }).then(async function () {
                         await server.start();
                     })
                 })
