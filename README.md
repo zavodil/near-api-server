@@ -15,7 +15,7 @@ Sign up for free: https://wallet.testnet.near.org/create and save your Seed Phra
 
 ###### Configure API Server
 
-Clone this repo, go to the application folder and edit settings.json file.
+Clone this repo, go to the application folder and edit `near-api-server.config.json` file.
 
 * server_host: `PUBLIC_IP`
 * server_port: `PORT`
