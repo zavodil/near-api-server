@@ -1,19 +1,58 @@
 # NEAR API SERVER
 
-> Perform blockchain calls with the simple REST API.
->
-> _Create blockchain accounts, mint NFT, transfer NFT, view NFT owners with the POST/GET requests._
-
-<br>
+> Interact with the NEAR blockchain using a simple REST API.
 
 ---
 
-<br>
+## Requirements
+
+- [NEAR Account](https://docs.near.org/docs/develop/basics/create-account) _(with access to private key or seed phrase)_
+- [Node.js](https://nodejs.org/en/download/package-manager/)
+- [npm](https://www.npmjs.com/get-npm) or [Yarn](https://yarnpkg.com/getting-started/install)
+
+---
+
+## Setup
+
+1. Clone repository
+
+```bash
+git clone git@github.com:near-examples/near-api-server.git
+```
+
+2. Install dependencies
+
+```bash
+npm install
+```
+
+3. Configure `near-api-server.config.json`
+
+Default settings:
+
+```json
+{
+  "server_host": "localhost",                   // IP address for server
+  "server_port": 3000,                          // server port
+  "rpc_node": "https://rpc.testnet.near.org",   // connected NEAR network (testnet, mainnet, or betanet)
+  "allow_rpc_update": false
+}
+```
+
+4. Start server
+
+```bash
+node app
+```
+
+---
+
+## Overview
 
 ### Init / Config
 
-| Route                           | Method | Description                              |
-| ------------------------------- | ------ | ---------------------------------------- |
+| Route                           | Method | Description                                                          |
+| ------------------------------- | ------ | -------------------------------------------------------------------- |
 | [`/init`](#Init-Master-Account) | POST   | sets up the master account and updates `near-api-server-config.json` |
 
 <br>
@@ -34,7 +73,7 @@
 | -------------------------------- | ------ | ----------------------------------------------- |
 | [`/mint_nft`](#mint-nft)         | POST   | Mints an NFT on deployed contract.              |
 | [`/transfer_nft`](#Transfer-NFT) | POST   | Transfers NFT ownership to a specified account. |
-| [`/nft`](#view-nft)              | POST   | View details of an NFT.                         |
+| [`/view_nft`](#view-nft)         | POST   | View details of an NFT.                         |
 | [`/create_user`](#create-user)   | POST   | Creates an NFT user.                            |
 
 <br>
@@ -46,38 +85,6 @@
 | [`/parse_seed_phrase`](#Parse-Seed-Phrase) | POST   | displays public and private key pair from a given seed phrase |
 
 <br>
-
----
-
-<br>
-
-## Create a NEAR Testnet Account
-
-Master account to mint NFT, register players, etc.
-Sign up for free: https://wallet.testnet.near.org/create and save your Seed Phrase.
-
-###### Configure API Server
-
-Clone this repo, go to the application folder and edit `near-api-server.config.json` file.
-
-- server_host: `PUBLIC_IP`
-- server_port: `PORT`
-
-###### Install Node.JS
-
-`sudo apt-get install -y nodejs`
-
-More details https://nodejs.org/en/download/package-manager/
-
-Install modules
-
-`npm install`
-
-###### Run the app
-
-`node app`
-
-NEAR API server will be available on `http://PUBLIC_IP:PORT`
 
 ---
 
@@ -139,6 +146,7 @@ POST `view`
 POST `call`
 
 ```
+
 {
     "account_id": "YOUR_ACCOUNT.testnet",
     "private_key": "YOUR_PRIVATE_KEY",
@@ -148,6 +156,7 @@ POST `call`
     "attached_gas": "100000000000000",
     "attached_tokens": "0"
 }
+
 ```
 
 ## NFTs
