@@ -23,19 +23,21 @@ module.exports = {
         }
     },
 
-    Init: async function (master_account_id, master_key, nft_contract, server_host, server_port, rpc_node){
-        try{
-          if(!settings.allow_rpc_update && rpc_node !== settings.rpc_node)
-              return api.reject("RPC update restricted. Please update config if you have access");
+    Init: async function (master_account_id, master_key, nft_contract, server_host, server_port, rpc_node) {
+        try {
+            if (rpc_node && !settings.allow_rpc_update)
+                return api.reject("RPC update restricted. Please update config if you have access");
+
+            const new_settings = settings;
+            if (master_account_id) new_settings.master_account_id = master_account_id;
+            if (master_key) new_settings.master_key = master_key;
+            if (nft_contract) new_settings.nft_contract = nft_contract;
+            if (server_host) new_settings.server_host = server_host;
+            if (server_port) new_settings.server_port = server_port;
+            if (rpc_node) new_settings.rpc_node = rpc_node;
 
             await fs.promises.writeFile(api.CONFIG_PATH, JSON.stringify({
-                ...settings,
-                "master_account_id": master_account_id,
-                "master_key": master_key,
-                "nft_contract": nft_contract,
-                "server_host": server_host,
-                "server_port": server_port,
-                "rpc_node": rpc_node
+                ...new_settings
             }));
 
             return api.notify("Settings updated.");
