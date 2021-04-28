@@ -185,14 +185,14 @@ Transfer NFT from specified `contract` on behalf of provided `enforce_owner_id` 
 View NFT (simple)
 ---
 
-GET `nft/{token_id}`
+GET `view_nft/{token_id}`
 
 Receive information about NFT
 
 Generic view NFT
 ---
 
-POST `nft`
+POST `view_nft`
 
 ```
 {
