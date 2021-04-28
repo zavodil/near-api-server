@@ -118,7 +118,7 @@ const init = async () => {
 
     server.route({
         method: 'GET',
-        path: '/nft/{token_id}',
+        path: '/view_nft/{token_id}',
         handler: async (request) => {
             return await token.ViewNFT(request.params.token_id);
         }
@@ -126,7 +126,7 @@ const init = async () => {
 
     server.route({
         method: 'POST',
-        path: '/nft/',
+        path: '/view_nft/',
         handler: async (request) => {
             return await token.ViewNFT(request.payload.token_id, request.payload.contract);
         }
