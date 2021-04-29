@@ -11,7 +11,7 @@
 - [npm](https://www.npmjs.com/get-npm) or [Yarn](https://yarnpkg.com/getting-started/install)
 - API request tool such as [Postman](https://www.postman.com/downloads/)
 
-# Setup
+## Setup
 
 1. Clone repository
 
@@ -34,7 +34,7 @@ Default settings:
   "server_host": "localhost", // IP address for server
   "server_port": 3000, // server port
   "rpc_node": "https://rpc.testnet.near.org", // connected NEAR network (testnet, mainnet, or betanet)
-  "allow_rpc_update": false
+  "allow_rpc_update": false // determines if you can update rpc node address via init route
 }
 ```
 
@@ -44,27 +44,29 @@ Default settings:
 node app
 ```
 
-# Overview
+---
+
+## Overview
 
 _Click on a route for more information and examples_
 
-## Init / Config
-
-| Route             | Method | Description                                                          |
-| ----------------- | ------ | -------------------------------------------------------------------- |
-| [`/init`](#/init) | POST   | sets up the master account and updates `near-api-server-config.json` |
-
-
-## Contracts
+### Contracts
 
 | Route                               | Method | Description                            |
 | ----------------------------------- | ------ | -------------------------------------- |
-| [`/deploy`](#Deploy-Smart-Contract) | POST   | Deploys a smart contract on NEAR.      |
+| [`/deploy`](#/deploy) | POST   | Deploys a smart contract on NEAR.      |
 | [`/view`](#View-Contract-Call)      | POST   | Performs a smart contract view call.   |
 | [`/call`](#Change-Contract-Call)    | POST   | Performs a smart contract change call. |
 
+### Utils
 
-## NFT Example Contract
+| Route                                      | Method | Description                                                          |
+| ------------------------------------------ | ------ | -------------------------------------------------------------------- |
+| [`/init`](#/init)                          | POST   | sets up the master account and updates `near-api-server-config.json` |
+| [`/create_user`](#create-user)             | POST   | Creates a NEAR account and stores credentials in /storage            |
+| [`/parse_seed_phrase`](#Parse-Seed-Phrase) | POST   | displays public and private key pair from a given seed phrase        |
+
+### NFT Example Contract
 
 | Route                            | Method | Description                                     |
 | -------------------------------- | ------ | ----------------------------------------------- |
@@ -72,24 +74,18 @@ _Click on a route for more information and examples_
 | [`/transfer_nft`](#Transfer-NFT) | POST   | Transfers NFT ownership to a specified account. |
 | [`/view_nft`](#view-nft)         | POST   | View details of an NFT.                         |
 
+---
 
-## Utils
-
-| Route                                      | Method | Description                                                   |
-| ------------------------------------------ | ------ | ------------------------------------------------------------- |
-| [`/create_user`](#create-user)             | POST   | Creates a NEAR account and stores credentials in /storage     |
-| [`/parse_seed_phrase`](#Parse-Seed-Phrase) | POST   | displays public and private key pair from a given seed phrase |
-
-
-# Routes
+## POST
 
 ## `/init`
+
 **Method:** **`POST`**
 
 _Configures master account for "simple method" NFT examples below_
 
-| Param                            | Description                                                                                                               |
-| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Param                            | Description                                                                                                             |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | `master_account_id`              | _Master account that has full access to the NFT contract below_                                                         |
 | `seed_phrase` _OR_ `private_key` | _Use [`near login`](https://docs.near.org/docs/tools/near-cli#near-login) to save your key pair to your local machine_  |
 | `nft_contract`                   | _Contract account that has NFT contract deployed to it_                                                                 |
@@ -114,7 +110,15 @@ Example:
 
 ## `/deploy`
 
-POST `deploy`
+**Method:** **`POST`**
+
+_Deploys a smart contract to the NEAR blockchain based on the wasm file located in `/contracts` folder_
+
+| Param                            | Description                                                                                                                                                                 |
+| -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `account_id`                     | _Account id that you will be deploying the contract to_                                                                                                                     |
+| `seed_phrase` _OR_ `private_key` | _Seed phrase or private key of the account id above (Use [`near login`](https://docs.near.org/docs/tools/near-cli#near-login) to save your key pair to your local machine)_ |
+| `contract`                       | _wasm file of compiled contract located in the `/contracts` folder of this project_                                                                                         |
 
 ```
 {
@@ -124,15 +128,7 @@ POST `deploy`
 }
 ```
 
-`contract` - filename of the wasm binary located in the `/contracts` folder, auto init for `nft_simple.wasm`
-
-You may optionally specify `private_key` instead of `seed_phrase`
-
-## Available methods
-
-Send requests using Postman/Insomnia/etc
-
-## View Contract Call
+## `/view`
 
 POST `view`
 
