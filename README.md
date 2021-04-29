@@ -190,12 +190,49 @@ Example Response:
 
 Example:
 
-```
+```json
 {
-    "contract": "inotel.pool.f863973.m0",
-    "method": "get_accounts",
-    "params": {"from_index": 0, "limit": 100}
+  "contract": "inotel.pool.f863973.m0",
+  "method": "get_accounts",
+  "params": { "from_index": 0, "limit": 5 }
 }
+```
+
+Example Response:
+
+```json
+[
+  {
+    "account_id": "ino.lockup.m0",
+    "unstaked_balance": "0",
+    "staked_balance": "2719843984800963837328608365424",
+    "can_withdraw": true
+  },
+  {
+    "account_id": "ino.testnet",
+    "unstaked_balance": "2",
+    "staked_balance": "3044983795632859169857527919579",
+    "can_withdraw": true
+  },
+  {
+    "account_id": "ino.stakewars.testnet",
+    "unstaked_balance": "2",
+    "staked_balance": "21704174266817478470830456026",
+    "can_withdraw": true
+  },
+  {
+    "account_id": "ds4.testnet",
+    "unstaked_balance": "3",
+    "staked_balance": "10891355794195012441764921",
+    "can_withdraw": true
+  },
+  {
+    "account_id": "32oijafsiodjfas.testnet",
+    "unstaked_balance": "3",
+    "staked_balance": "383757424103247547511904666",
+    "can_withdraw": true
+  }
+]
 ```
 
 ---
