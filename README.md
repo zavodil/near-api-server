@@ -285,27 +285,17 @@ Example:
 
 This will create 3 NFTs: `test_21`, `test_22` and `test_23`.
 
+---
 
-## Transfer NFT
+## `/transfer_nft`
 
-### Transfer NFT (simple)
+**Method:** **`POST`**
 
-> Transfer NFT from specified `contract` on behalf of provided `enforce_owner_id` signed with `owner_private_key`.
+_Transfers ownership of NFT from specified contract on behalf of provided `enforece_owner_if` signed with `owner_private_key`_
 
-POST `transfer_nft`
+### Standard Transfer NFT
 
-```
-{
-    "token_id": "007",
-    "receiver_id": "james.YOUR_ACCOUNT.testnet",
-    "enforce_owner_id": "YOUR_ACCOUNT.testnet",
-    "memo": "Welcome gift"
-}
-```
-
-### Generic Transfer NFT
-
-POST `transfer_nft`
+Example:
 
 ```
 {
@@ -318,15 +308,33 @@ POST `transfer_nft`
 }
 ```
 
+### Simple Transfer NFTs
+
+_Requires [`/init`](#init) configuration with master account._
+
+
+Example:
+
+```
+{
+    "token_id": "007",
+    "receiver_id": "james.YOUR_ACCOUNT.testnet",
+    "enforce_owner_id": "YOUR_ACCOUNT.testnet",
+    "memo": "Welcome gift"
+}
+```
+
+---
+
 ## View NFT
 
-### View NFT (simple)
+### Simple View NFT
 
 GET `nft/{token_id}`
 
 Receive information about NFT
 
-### Generic view NFT
+### Standard View NFT 
 
 POST `nft`
 
