@@ -63,16 +63,16 @@ _Click on a route for more information and examples_
 | Route                                      | Method | Description                                                          |
 | ------------------------------------------ | ------ | -------------------------------------------------------------------- |
 | [`/init`](#init)                           | POST   | sets up the master account and updates `near-api-server-config.json` |
-| [`/create_user`](#create-user)             | POST   | Creates a NEAR account and stores credentials in /storage            |
-| [`/parse_seed_phrase`](#Parse-Seed-Phrase) | POST   | displays public and private key pair from a given seed phrase        |
+| [`/create_user`](#create_user)             | POST   | Creates a NEAR account and stores credentials in /storage            |
+| [`/parse_seed_phrase`](#parse_seed_phrase) | POST   | displays public and private key pair from a given seed phrase        |
 
 ### NFT Example Contract
 
 | Route                            | Method | Description                                     |
 | -------------------------------- | ------ | ----------------------------------------------- |
-| [`/mint_nft`](#mint-nft)         | POST   | Mints an NFT on deployed contract.              |
-| [`/transfer_nft`](#Transfer-NFT) | POST   | Transfers NFT ownership to a specified account. |
-| [`/view_nft`](#view-nft)         | POST   | View details of an NFT.                         |
+| [`/mint_nft`](#mint_nft)         | POST   | Mints an NFT on deployed contract.              |
+| [`/transfer_nft`](#transfer_nft) | POST   | Transfers NFT ownership to a specified account. |
+| [`/view_nft`](#view_nft)         | POST   | View details of an NFT.                         |
 
 ---
 
@@ -130,9 +130,9 @@ Example:
 
 ## `/call`
 
-_Performs a smart contract call that changes state._
-
 **Method:** **`POST`**
+
+_Performs a smart contract call that changes state._
 
 | Param                            | Description                                                                                                           |
 | -------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
@@ -144,10 +144,11 @@ _Performs a smart contract call that changes state._
 | `attached_gas`                   | _Amount of gas you will be attaching to the call in [TGas](https://docs.near.org/docs/concepts/gas#thinking-in-gas)._ |
 | `attached_tokens`                | _Amount of tokens to be sent to the contract you are calling in yoctoNEAR (10^-24 NEAR)._                             |
 
+_**Note:** Use [`near login`](https://docs.near.org/docs/tools/near-cli#near-login) to save your key pair to your local machine._
+
 Example:
 
 ```
-
 {
     "account_id": "YOUR_ACCOUNT.testnet",
     "private_key": "YOUR_PRIVATE_KEY",
@@ -173,11 +174,13 @@ _Configures master account for use with "simple method" NFT examples._
 | Param                            | Description                                                                                                             |
 | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | `master_account_id`              | _Master account that has full access to the NFT contract below_                                                         |
-| `seed_phrase` _OR_ `private_key` | _Use [`near login`](https://docs.near.org/docs/tools/near-cli#near-login) to save your key pair to your local machine_  |
+| `seed_phrase` _OR_ `private_key` | _Seed phrase OR private key of the account id above._                                                                   |
 | `nft_contract`                   | _Contract account that has NFT contract deployed to it_                                                                 |
 | `server_host`                    | _Public IP address for your API server (localhost is default)_                                                          |
 | `server_port`                    | _(Port your API server will listen on)_                                                                                 |
 | `rpc_node`                       | _[Network](https://docs.near.org/docs/concepts/networks) your server will be running on (testnet, mainnet, or betanet)_ |
+
+_**Note:** Use [`near login`](https://docs.near.org/docs/tools/near-cli#near-login) to save your key pair to your local machine._
 
 Example:
 
@@ -189,6 +192,18 @@ Example:
    "server_host": "localhost",
    "server_port": 3000,
    "rpc_node": "https://rpc.testnet.near.org"
+}
+```
+
+### `/create_user`
+
+**Method:** **`POST`**
+
+_Creates a NEAR account using initialized master account and saves to `/storage` directory_
+
+```
+{
+    "name" : "james"
 }
 ```
 
@@ -210,23 +225,41 @@ Example:
 
 ## NFTs
 
-## Mint NFT
+### `/mint_nft`
 
-### Generic NFT minting
+**Method:** **`POST`**
+
+_Mints a new NFT for specified contract._
+
+### Standard NFT Minting
+
+| Param                            | Description                                            |
+| -------------------------------- | ------------------------------------------------------ |
+| `token_id`                       | _ID for new token you are minting_                     |
+| `metadata`                       | _Metadata for the new token as a string._              |
+| `account_id`                     | _Account ID for the new token owner._                  |
+| `seed_phrase` _OR_ `private_key` | _Seed phrase OR private key for the NFT contract._     |
+| `nft_contract`                   | _Account ID for the NFT contract your are minting on._ |
+
+_**Note:** Use [`near login`](https://docs.near.org/docs/tools/near-cli#near-login) to save your key pair to your local machine._
+
+Example:
 
 ```
 {
-    "token_id": "test_123",
+    "token_id": "EXAMPLE-TOKEN",
     "metadata": "",
     "account_id": "YOUR_ACCOUNT.testnet",
     "private_key": "YOUR_PRIVATE_KEY",
-    "contract": "nft.something.near",
+    "contract": "nft.example.near",
 }
 ```
 
-### Mint NFTs Token (simple)
+### Simple NFT Minting
 
-POST `mint_nft`
+_Requires [`/init`](#init) configuration with master account._
+
+Example:
 
 ```
 {
@@ -235,9 +268,11 @@ POST `mint_nft`
 }
 ```
 
-Original token owner is `YOUR_ACCOUNT.testnet`
-
 ### Batch NFT minting (simple)
+
+_Requires [`/init`](#init) configuration with master account._
+
+Example: 
 
 ```
 {
@@ -248,19 +283,8 @@ Original token owner is `YOUR_ACCOUNT.testnet`
 }
 ```
 
-This will create 3 NFTs: `test_21`, `test_22` and `test_23`
+This will create 3 NFTs: `test_21`, `test_22` and `test_23`.
 
-Mints NFT using specified `contract` on behalf of provided `account_id`.
-
-### Create user
-
-POST `create_user`
-
-```
-{
-    "name" : "james"
-}
-```
 
 ## Transfer NFT
 
