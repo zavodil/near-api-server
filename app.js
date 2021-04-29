@@ -20,7 +20,7 @@ const init = async () => {
         host: settings.server_host
     });
 
-    function PrecessRequest(request) {
+    function processRequest(request) {
         Object.keys(request.payload).map((key) => {
             switch (request.payload[key]) {
                 case "{username}":
@@ -62,7 +62,7 @@ const init = async () => {
         method: 'POST',
         path: '/view',
         handler: async (request) => {
-            request = PrecessRequest(request);
+            request = processRequest(request);
             return await blockchain.View(request.payload.contract, request.payload.method, request.payload.params);
         }
     });
@@ -71,7 +71,7 @@ const init = async () => {
         method: 'POST',
         path: '/call',
         handler: async (request) => {
-            request = PrecessRequest(request);
+            request = processRequest(request);
             let {account_id, private_key, attached_tokens, attached_gas, contract, method, params} = request.payload;
             return await blockchain.Call(account_id, private_key, attached_tokens, attached_gas, contract, method, params);
         }
@@ -81,7 +81,7 @@ const init = async () => {
         method: 'POST',
         path: '/init',
         handler: async (request) => {
-            request = PrecessRequest(request);
+            request = processRequest(request);
             let {master_account_id, seed_phrase, private_key, nft_contract, server_host, server_port, rpc_node} = request.payload;
 
             if(seed_phrase)
@@ -105,7 +105,7 @@ const init = async () => {
         method: 'POST',
         path: '/deploy',
         handler: async (request) => {
-            request = PrecessRequest(request);
+            request = processRequest(request);
             let {account_id, private_key, seed_phrase, contract} = request.payload;
 
             if(seed_phrase)
@@ -118,7 +118,7 @@ const init = async () => {
 
     server.route({
         method: 'GET',
-        path: '/nft/{token_id}',
+        path: '/view_nft/{token_id}',
         handler: async (request) => {
             return await token.ViewNFT(request.params.token_id);
         }
@@ -126,7 +126,7 @@ const init = async () => {
 
     server.route({
         method: 'POST',
-        path: '/nft/',
+        path: '/view_nft/',
         handler: async (request) => {
             return await token.ViewNFT(request.payload.token_id, request.payload.contract);
         }
@@ -136,7 +136,7 @@ const init = async () => {
         method: 'POST',
         path: '/create_user',
         handler: async (request) => {
-            request = PrecessRequest(request);
+            request = processRequest(request);
 
             const name = (request.payload.name + "." + settings.master_account_id).toLowerCase();
             let account = await user.CreateKeyPair(name);
@@ -154,7 +154,7 @@ const init = async () => {
         method: 'POST',
         path: '/parse_seed_phrase',
         handler: async (request, h) => {
-            request = PrecessRequest(request);
+            request = processRequest(request);
 
             return await user.GetKeysFromSeedPhrase(request.payload.seed_phrase);
         }
@@ -170,7 +170,7 @@ const init = async () => {
                 min = max = 0;
             let response = [];
 
-            request = PrecessRequest(request);
+            request = processRequest(request);
             for (let i = min; i <= max; i++) {
                 const tokenId = request.payload.token_id.replace("{inc}", i);
 
@@ -199,7 +199,7 @@ const init = async () => {
         method: 'POST',
         path: '/transfer_nft',
         handler: async (request, h) => {
-            request = PrecessRequest(request);
+            request = processRequest(request);
 
             let {token_id, receiver_id, enforce_owner_id, memo, contract, owner_private_key} = request.payload;
 
