@@ -178,7 +178,7 @@ Example Response:
 
 ## `/view`
 
-> _Performs a smart contract view call._
+> _Performs a smart contract view call that is free of charge (no gas burnt)._
 
 **Method:** **`POST`**
 
@@ -239,7 +239,7 @@ Example Response:
 
 ## `/call`
 
-> _Performs a smart contract call that changes state._
+> _Performs a smart contract call that changes state and burns gas._
 
 **Method:** **`POST`**
 
@@ -257,17 +257,114 @@ _**Note:** Use [`near login`](https://docs.near.org/docs/tools/near-cli#near-log
 
 Example:
 
-```
+```json
 {
-    "account_id": "YOUR_ACCOUNT.testnet",
-    "private_key": "YOUR_PRIVATE_KEY",
-    "contract": "inotel.pool.f863973.m0",
-    "method": "ping",
-    "params": {},
-    "attached_gas": "100000000000000",
-    "attached_tokens": "0"
+  "account_id": "example.testnet",
+  "private_key": "2Kh6PJjxH5PTTsVnYqtgnnwXHeafvVGczDXoCb33ws8reyq8J4oBYix1KP2ugRQ7q9NQUyPcVFTtbSG3ARVKETfK",
+  "contract": "guest-book.testnet",
+  "method": "addMessage",
+  "params": { "text": "Hello World" },
+  "attached_gas": "100000000000000",
+  "attached_tokens": "0"
 }
+```
 
+Example Response:
+
+```json
+{
+  "status": {
+    "SuccessValue": ""
+  },
+  "transaction": {
+    "signer_id": "example.testnet",
+    "public_key": "ed25519:ASZEids5Qa8XMHX2S7LRL4bQRczi4YuMWXSM7S1HE5b",
+    "nonce": 4,
+    "receiver_id": "guest-book.testnet",
+    "actions": [
+      {
+        "FunctionCall": {
+          "method_name": "addMessage",
+          "args": "eyJ0ZXh0IjoiSGVsbG8gV29ybGQifQ==",
+          "gas": 100000000000000,
+          "deposit": "0"
+        }
+      }
+    ],
+    "signature": "ed25519:4T9FqsjYBxcitjd5GgHrv3i3hcdcJSNcwwG3jBUgs7zZCZ3uShAK44Hi3oYFefhr8e5UW3LLD49ofRpGXKwGqqot",
+    "hash": "CniHtfQVzcyVWJaUrQibJyGdhLi5axsjsoSRvvFbJ1jv"
+  },
+  "transaction_outcome": {
+    "proof": [
+      {
+        "hash": "EkzDGbbBHSAuJcCPmhKSqbnBKyLrMgXkrTEZZZQudHeH",
+        "direction": "Right"
+      },
+      {
+        "hash": "36j4PK6fsLChiVTBQnXS1ywVSgJgHo7FtWzd5y5jkK1B",
+        "direction": "Right"
+      }
+    ],
+    "block_hash": "CUAu2deED8UX4vkerCbsTMR7YkeKt8RQXknYMNrVvM7C",
+    "id": "CniHtfQVzcyVWJaUrQibJyGdhLi5axsjsoSRvvFbJ1jv",
+    "outcome": {
+      "logs": [],
+      "receipt_ids": ["B7xAYoga5vrKERK7wY7EHa2Z74LaRJwqPsh4esLrKeQF"],
+      "gas_burnt": 2427992549888,
+      "tokens_burnt": "242799254988800000000",
+      "executor_id": "example.testnet",
+      "status": {
+        "SuccessReceiptId": "B7xAYoga5vrKERK7wY7EHa2Z74LaRJwqPsh4esLrKeQF"
+      }
+    }
+  },
+  "receipts_outcome": [
+    {
+      "proof": [
+        {
+          "hash": "6Uo6BajpAxiraJEv69RwhjYnC86u56cw29vRDB1SV4dv",
+          "direction": "Right"
+        }
+      ],
+      "block_hash": "Ecq6pK74uiJFKxPTaasYuQcsEznnQjdzMAfsyrBpDo2u",
+      "id": "B7xAYoga5vrKERK7wY7EHa2Z74LaRJwqPsh4esLrKeQF",
+      "outcome": {
+        "logs": [],
+        "receipt_ids": ["6S6m1TYuVPYovLu9FHGV5oLRnDXeNQ8NhXxYjcr91xAN"],
+        "gas_burnt": 3766420707221,
+        "tokens_burnt": "376642070722100000000",
+        "executor_id": "guest-book.testnet",
+        "status": {
+          "SuccessValue": ""
+        }
+      }
+    },
+    {
+      "proof": [
+        {
+          "hash": "2za2YKUhyMfWbeEL7UKZxZcQbAqEmSPgPoYh9QDdeJQi",
+          "direction": "Left"
+        },
+        {
+          "hash": "61aHEiTBBbPU8UEXgSQh42TujFkHXQQMSuTh13PLPwbG",
+          "direction": "Right"
+        }
+      ],
+      "block_hash": "6LfpzvCBkqq7h5uG9VjAHMwSpC3HMMBSAGNGhbrAJzKP",
+      "id": "6S6m1TYuVPYovLu9FHGV5oLRnDXeNQ8NhXxYjcr91xAN",
+      "outcome": {
+        "logs": [],
+        "receipt_ids": [],
+        "gas_burnt": 0,
+        "tokens_burnt": "0",
+        "executor_id": "example.testnet",
+        "status": {
+          "SuccessValue": ""
+        }
+      }
+    }
+  ]
+}
 ```
 
 ---
