@@ -1,6 +1,36 @@
 # NEAR REST API SERVER
 
 > Interact with the NEAR blockchain using a simple REST API.
+ 
+---
+
+## Overview
+
+_Click on a route for more information and examples_
+
+### Contracts
+
+| Route                | Method | Description                            |
+| -------------------- | ------ | -------------------------------------- |
+| [`/deploy`](#deploy) | POST   | Deploys a smart contract on NEAR.      |
+| [`/view`](#view)     | POST   | Performs a smart contract view call.   |
+| [`/call`](#call)     | POST   | Performs a smart contract change call. |
+
+### Utils
+
+| Route                                      | Method | Description                                                          |
+| ------------------------------------------ | ------ | -------------------------------------------------------------------- |
+| [`/init`](#init)                           | POST   | sets up the master account and updates `near-api-server-config.json` |
+| [`/create_user`](#create_user)             | POST   | Creates a NEAR account and stores credentials in /storage            |
+| [`/parse_seed_phrase`](#parse_seed_phrase) | POST   | displays public and private key pair from a given seed phrase        |
+
+### NFT Example Contract
+
+| Route                            | Method | Description                                     |
+| -------------------------------- | ------ | ----------------------------------------------- |
+| [`/mint_nft`](#mint_nft)         | POST   | Mints an NFT on deployed contract.              |
+| [`/transfer_nft`](#transfer_nft) | POST   | Transfers NFT ownership to a specified account. |
+| [`/view_nft`](#view_nft)         | POST   | View details of an NFT.                         |
 
 ---
 
@@ -43,36 +73,6 @@ Default settings:
 ```bash
 node app
 ```
-
----
-
-## Overview
-
-_Click on a route for more information and examples_
-
-### Contracts
-
-| Route                | Method | Description                            |
-| -------------------- | ------ | -------------------------------------- |
-| [`/deploy`](#deploy) | POST   | Deploys a smart contract on NEAR.      |
-| [`/view`](#view)     | POST   | Performs a smart contract view call.   |
-| [`/call`](#call)     | POST   | Performs a smart contract change call. |
-
-### Utils
-
-| Route                                      | Method | Description                                                          |
-| ------------------------------------------ | ------ | -------------------------------------------------------------------- |
-| [`/init`](#init)                           | POST   | sets up the master account and updates `near-api-server-config.json` |
-| [`/create_user`](#create_user)             | POST   | Creates a NEAR account and stores credentials in /storage            |
-| [`/parse_seed_phrase`](#parse_seed_phrase) | POST   | displays public and private key pair from a given seed phrase        |
-
-### NFT Example Contract
-
-| Route                            | Method | Description                                     |
-| -------------------------------- | ------ | ----------------------------------------------- |
-| [`/mint_nft`](#mint_nft)         | POST   | Mints an NFT on deployed contract.              |
-| [`/transfer_nft`](#transfer_nft) | POST   | Transfers NFT ownership to a specified account. |
-| [`/view_nft`](#view_nft)         | POST   | View details of an NFT.                         |
 
 ---
 
