@@ -192,9 +192,13 @@ Example:
 }
 ```
 
-### Parse Seed Phrase
+### `/parse_seed_phrase`
 
-POST `parse_seed_phrase`
+**Method:** **`POST`**
+
+_Converts seed phrase into public / private key pair._
+
+Example:
 
 ```
 {
