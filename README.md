@@ -10,7 +10,6 @@ _Click on a route for more information and examples_
 
 | Route                                      | Method | Description                                                          |
 | ------------------------------------------ | ------ | -------------------------------------------------------------------- |
-|                                            |        |                                                                      |
 | **CONTRACTS**                              |        |                                                                      |
 | [`/deploy`](#deploy)                       | POST   | Deploys a smart contract on NEAR.                                    |
 | [`/view`](#view)                           | POST   | Performs a smart contract view call.                                 |
@@ -21,7 +20,7 @@ _Click on a route for more information and examples_
 | [`/create_user`](#create_user)             | POST   | Creates a NEAR account and stores credentials in /storage            |
 | [`/parse_seed_phrase`](#parse_seed_phrase) | POST   | displays public and private key pair from a given seed phrase        |
 |                                            |        |                                                                      |
-| **NFT EX CONTRACT**                        |        |                                                                      |
+| **NFT Ex. CONTRACT**                       |        |                                                                      |
 | [`/mint_nft`](#mint_nft)                   | POST   | Mints an NFT on deployed contract.                                   |
 | [`/transfer_nft`](#transfer_nft)           | POST   | Transfers NFT ownership to a specified account.                      |
 | [`/view_nft`](#view_nft)                   | POST   | View details of an NFT.                                              |
@@ -34,6 +33,8 @@ _Click on a route for more information and examples_
 - [Node.js](https://nodejs.org/en/download/package-manager/)
 - [npm](https://www.npmjs.com/get-npm) or [Yarn](https://yarnpkg.com/getting-started/install)
 - API request tool such as [Postman](https://www.postman.com/downloads/)
+
+---
 
 ## Setup
 
@@ -217,9 +218,9 @@ Example:
 
 ---
 
-## NFTs
+# NFTs
 
-### `/mint_nft`
+## `/mint_nft`
 
 **Method:** **`POST`**
 
@@ -289,6 +290,17 @@ _Transfers ownership of NFT from specified contract on behalf of provided `enfor
 
 ### Standard Transfer NFT
 
+| Param               | Description                                               |
+| ------------------- | --------------------------------------------------------- |
+| `token_id`          | _Token ID of the token being transferred_                 |
+| `receiver_id`       | _Account ID taking ownership of the NFT_                  |
+| `enforce_owner_id`  | _Account ID for the account that currently owns the NFT._ |
+| `memo`              | _Optional message to new token holder._                   |
+| `owner_private_key` | _Private key of the `enforce_owner_id`._                  |
+| `nft_contract`      | _NFT contract that the token being transferred is on._    |
+
+_**Note:** Use [`near login`](https://docs.near.org/docs/tools/near-cli#near-login) to save your key pair to your local machine._
+
 Example:
 
 ```
@@ -305,6 +317,13 @@ Example:
 ### Simple Transfer NFTs
 
 _Requires [`/init`](#init) configuration with master account._
+
+| Param              | Description                                               |
+| ------------------ | --------------------------------------------------------- |
+| `token_id`         | _Token ID of the token being transferred_                 |
+| `receiver_id`      | _Account ID taking ownership of the NFT_                  |
+| `enforce_owner_id` | _Account ID for the account that currently owns the NFT._ |
+| `memo`             | _Optional message to new token holder._                   |
 
 Example:
 
