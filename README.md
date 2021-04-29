@@ -91,11 +91,86 @@ _**Note:** Use [`near login`](https://docs.near.org/docs/tools/near-cli#near-log
 
 Example:
 
-```
+```json
 {
-    "account_id": "YOUR_ACCOUNT.testnet",
-    "seed_phrase":  "seed phrase for account_id above goes here",
-    "contract": "nft_simple.wasm"
+  "account_id": "example.testnet",
+  "seed_phrase": "witch collapse practice feed shame open despair creek road again ice least",
+  "contract": "nft_simple.wasm"
+}
+```
+
+Example Response:
+
+```json
+{
+  "status": {
+    "SuccessValue": ""
+  },
+  "transaction": {
+    "signer_id": "example.testnet",
+    "public_key": "ed25519:Cgg4i7ciid8uG4K5Vnjzy5N4PXLst5aeH9ApRAUA3y8U",
+    "nonce": 5,
+    "receiver_id": "example.testnet",
+    "actions": [
+      {
+        "DeployContract": {
+          "code": "hT9saWV3aok50F8JundSIWAW+lxOcBOns1zenB2fB4E="
+        }
+      }
+    ],
+    "signature": "ed25519:3VrppDV8zMMRXErdBJVU9MMbbKZ4SK1pBZqXoyw3oSSiXTeyR2W7upNhhZPdFJ1tNBr9h9SnsTVeBm5W9Bhaemis",
+    "hash": "HbokHoCGcjGQZrz8yU8QDqBeAm5BN8iPjaSMXu7Yp2KY"
+  },
+  "transaction_outcome": {
+    "proof": [
+      {
+        "hash": "Dfjn2ro1dXrPqgzd5zU7eJpCMKnATm295ceocX73Qiqn",
+        "direction": "Right"
+      },
+      {
+        "hash": "9raAgMrEmLpL6uiynMAi9rykJrXPEZN4WSxLJUJXbipY",
+        "direction": "Right"
+      }
+    ],
+    "block_hash": "B64cQPDNkwiCcN3SGXU2U5Jz5M9EKF1hC6uDi4S15Fb3",
+    "id": "HbokHoCGcjGQZrz8yU8QDqBeAm5BN8iPjaSMXu7Yp2KY",
+    "outcome": {
+      "logs": [],
+      "receipt_ids": ["D94GcZVXE2WgPGuaJPJq8MdeEUidrN1FPkuU75NXWm7X"],
+      "gas_burnt": 1733951676474,
+      "tokens_burnt": "173395167647400000000",
+      "executor_id": "example.testnet",
+      "status": {
+        "SuccessReceiptId": "D94GcZVXE2WgPGuaJPJq8MdeEUidrN1FPkuU75NXWm7X"
+      }
+    }
+  },
+  "receipts_outcome": [
+    {
+      "proof": [
+        {
+          "hash": "3HLkv7KrQ9LPptX658QiwkFagv8NwjcxF6ti15Een4uh",
+          "direction": "Left"
+        },
+        {
+          "hash": "9raAgMrEmLpL6uiynMAi9rykJrXPEZN4WSxLJUJXbipY",
+          "direction": "Right"
+        }
+      ],
+      "block_hash": "B64cQPDNkwiCcN3SGXU2U5Jz5M9EKF1hC6uDi4S15Fb3",
+      "id": "D94GcZVXE2WgPGuaJPJq8MdeEUidrN1FPkuU75NXWm7X",
+      "outcome": {
+        "logs": [],
+        "receipt_ids": [],
+        "gas_burnt": 1733951676474,
+        "tokens_burnt": "173395167647400000000",
+        "executor_id": "example.testnet",
+        "status": {
+          "SuccessValue": ""
+        }
+      }
+    }
+  ]
 }
 ```
 
