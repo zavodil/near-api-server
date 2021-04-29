@@ -190,7 +190,9 @@ Example:
 }
 ```
 
-### `/create_user`
+---
+
+## `/create_user`
 
 **Method:** **`POST`**
 
@@ -202,7 +204,9 @@ _Creates a NEAR account using initialized master account and saves to `/storage`
 }
 ```
 
-### `/parse_seed_phrase`
+---
+
+## `/parse_seed_phrase`
 
 **Method:** **`POST`**
 
