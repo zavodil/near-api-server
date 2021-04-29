@@ -52,11 +52,11 @@ _Click on a route for more information and examples_
 
 ### Contracts
 
-| Route                            | Method | Description                            |
-| -------------------------------- | ------ | -------------------------------------- |
-| [`/deploy`](#deploy)             | POST   | Deploys a smart contract on NEAR.      |
-| [`/view`](#View-Contract-Call)   | POST   | Performs a smart contract view call.   |
-| [`/call`](#Change-Contract-Call) | POST   | Performs a smart contract change call. |
+| Route                | Method | Description                            |
+| -------------------- | ------ | -------------------------------------- |
+| [`/deploy`](#deploy) | POST   | Deploys a smart contract on NEAR.      |
+| [`/view`](#view)     | POST   | Performs a smart contract view call.   |
+| [`/call`](#call)     | POST   | Performs a smart contract change call. |
 
 ### Utils
 
@@ -82,13 +82,15 @@ _Click on a route for more information and examples_
 
 **Method:** **`POST`**
 
-_Deploys a smart contract to the NEAR blockchain based on the wasm file located in `/contracts` folder_
+_Deploys a smart contract to the NEAR blockchain based on the wasm file located in `/contracts` folder._
 
-| Param                            | Description                                                                                                                                                                 |
-| -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `account_id`                     | _Account id that you will be deploying the contract to_                                                                                                                     |
-| `seed_phrase` _OR_ `private_key` | _Seed phrase or private key of the account id above (Use [`near login`](https://docs.near.org/docs/tools/near-cli#near-login) to save your key pair to your local machine)_ |
-| `contract`                       | _wasm file of compiled contract located in the `/contracts` folder of this project_                                                                                         |
+| Param                            | Description                                                                          |
+| -------------------------------- | ------------------------------------------------------------------------------------ |
+| `account_id`                     | _Account id that you will be deploying the contract to._                             |
+| `seed_phrase` _OR_ `private_key` | _Seed phrase OR private key of the account id above._                                |
+| `contract`                       | _wasm file of compiled contract located in the `/contracts` folder of this project._ |
+
+_**Note:** Use [`near login`](https://docs.near.org/docs/tools/near-cli#near-login) to save your key pair to your local machine._
 
 Example:
 
@@ -106,15 +108,15 @@ Example:
 
 **Method:** **`POST`**
 
-_Performs a contract view call_
+_Performs a smart contract view call._
 
 | Param      | Description                                                                               |
 | ---------- | ----------------------------------------------------------------------------------------- |
 | `contract` | _Account id of the smart contract you are calling._                                       |
-| `method`   | _Name of the public method on the contract you are calling_                               |
+| `method`   | _Name of the public method on the contract you are calling._                              |
 | `params`   | _Arguments the method of the contract takes. Pass an empty object if no args are needed._ |
 
-Example: 
+Example:
 
 ```
 {
@@ -124,9 +126,25 @@ Example:
 }
 ```
 
-## Change Contract Call
+---
 
-POST `call`
+## `/call`
+
+_Performs a smart contract call that changes state._
+
+**Method:** **`POST`**
+
+| Param                            | Description                                                                                                           |
+| -------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `account_id`                     | _Account id that will be performing the call and will be charged for gas and attached tokens / deposit._              |
+| `seed_phrase` _OR_ `private_key` | _Seed phrase OR private key of the account id above._                                                                 |
+| `contract`                       | _Account id of the smart contract you will be calling._                                                               |
+| `method`                         | _Public method on the smart contract that you will be calling._                                                       |
+| `params`                         | _Arguments the method of the contract takes. Pass an empty object if no args are needed._                             |
+| `attached_gas`                   | _Amount of gas you will be attaching to the call in [TGas](https://docs.near.org/docs/concepts/gas#thinking-in-gas)._ |
+| `attached_tokens`                | _Amount of tokens to be sent to the contract you are calling in yoctoNEAR (10^-24 NEAR)._                             |
+
+Example:
 
 ```
 
@@ -142,13 +160,15 @@ POST `call`
 
 ```
 
+---
+
 # Utils
 
 ## `/init`
 
 **Method:** **`POST`**
 
-_Configures master account for "simple method" NFT examples below_
+_Configures master account for use with "simple method" NFT examples._
 
 | Param                            | Description                                                                                                             |
 | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
