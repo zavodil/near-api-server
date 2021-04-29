@@ -77,9 +77,9 @@ node app
 
 ## `/deploy`
 
-**Method:** **`POST`**
+> _Deploys a smart contract to the NEAR blockchain based on the wasm file located in `/contracts` folder._
 
-_Deploys a smart contract to the NEAR blockchain based on the wasm file located in `/contracts` folder._
+**Method:** **`POST`**
 
 | Param                            | Description                                                                          |
 | -------------------------------- | ------------------------------------------------------------------------------------ |
@@ -103,9 +103,9 @@ Example:
 
 ## `/view`
 
-**Method:** **`POST`**
+> _Performs a smart contract view call._
 
-_Performs a smart contract view call._
+**Method:** **`POST`**
 
 | Param      | Description                                                                               |
 | ---------- | ----------------------------------------------------------------------------------------- |
@@ -127,9 +127,9 @@ Example:
 
 ## `/call`
 
-**Method:** **`POST`**
+> _Performs a smart contract call that changes state._
 
-_Performs a smart contract call that changes state._
+**Method:** **`POST`**
 
 | Param                            | Description                                                                                                           |
 | -------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
@@ -164,9 +164,9 @@ Example:
 
 ## `/init`
 
-**Method:** **`POST`**
+> _Configures master account for use with "simple method" NFT examples._
 
-_Configures master account for use with "simple method" NFT examples._
+**Method:** **`POST`**
 
 | Param                            | Description                                                                                                             |
 | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
@@ -196,9 +196,9 @@ Example:
 
 ## `/create_user`
 
-**Method:** **`POST`**
+> _Creates a NEAR account using initialized master account and saves to `/storage` directory._
 
-_Creates a NEAR account using initialized master account and saves to `/storage` directory_
+**Method:** **`POST`**
 
 ```
 {
@@ -210,9 +210,9 @@ _Creates a NEAR account using initialized master account and saves to `/storage`
 
 ## `/parse_seed_phrase`
 
-**Method:** **`POST`**
+> _Converts seed phrase into public / private key pair._
 
-_Converts seed phrase into public / private key pair._
+**Method:** **`POST`**
 
 Example:
 
@@ -228,9 +228,9 @@ Example:
 
 ## `/mint_nft`
 
-**Method:** **`POST`**
+> _Mints a new NFT for specified contract._
 
-_Mints a new NFT for specified contract._
+**Method:** **`POST`**
 
 ### Standard NFT Minting
 
@@ -290,9 +290,9 @@ This will create 3 NFTs: `test_21`, `test_22` and `test_23`.
 
 ## `/transfer_nft`
 
-**Method:** **`POST`**
+> _Transfers ownership of NFT from specified contract on behalf of provided `enforece_owner_if` signed with `owner_private_key`._
 
-_Transfers ownership of NFT from specified contract on behalf of provided `enforece_owner_if` signed with `owner_private_key`_
+**Method:** **`POST`**
 
 ### Standard Transfer NFT
 
@@ -322,7 +322,7 @@ Example:
 
 ### Simple Transfer NFTs
 
-_Requires [`/init`](#init) configuration with master account._
+> _Requires [`/init`](#init) configuration with master account._
 
 | Param              | Description                                               |
 | ------------------ | --------------------------------------------------------- |
