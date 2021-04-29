@@ -52,17 +52,17 @@ _Click on a route for more information and examples_
 
 ### Contracts
 
-| Route                               | Method | Description                            |
-| ----------------------------------- | ------ | -------------------------------------- |
-| [`/deploy`](#/deploy) | POST   | Deploys a smart contract on NEAR.      |
-| [`/view`](#View-Contract-Call)      | POST   | Performs a smart contract view call.   |
-| [`/call`](#Change-Contract-Call)    | POST   | Performs a smart contract change call. |
+| Route                            | Method | Description                            |
+| -------------------------------- | ------ | -------------------------------------- |
+| [`/deploy`](#deploy)             | POST   | Deploys a smart contract on NEAR.      |
+| [`/view`](#View-Contract-Call)   | POST   | Performs a smart contract view call.   |
+| [`/call`](#Change-Contract-Call) | POST   | Performs a smart contract change call. |
 
 ### Utils
 
 | Route                                      | Method | Description                                                          |
 | ------------------------------------------ | ------ | -------------------------------------------------------------------- |
-| [`/init`](#/init)                          | POST   | sets up the master account and updates `near-api-server-config.json` |
+| [`/init`](#init)                           | POST   | sets up the master account and updates `near-api-server-config.json` |
 | [`/create_user`](#create-user)             | POST   | Creates a NEAR account and stores credentials in /storage            |
 | [`/parse_seed_phrase`](#Parse-Seed-Phrase) | POST   | displays public and private key pair from a given seed phrase        |
 
@@ -76,37 +76,7 @@ _Click on a route for more information and examples_
 
 ---
 
-## POST
-
-## `/init`
-
-**Method:** **`POST`**
-
-_Configures master account for "simple method" NFT examples below_
-
-| Param                            | Description                                                                                                             |
-| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `master_account_id`              | _Master account that has full access to the NFT contract below_                                                         |
-| `seed_phrase` _OR_ `private_key` | _Use [`near login`](https://docs.near.org/docs/tools/near-cli#near-login) to save your key pair to your local machine_  |
-| `nft_contract`                   | _Contract account that has NFT contract deployed to it_                                                                 |
-| `server_host`                    | _Public IP address for your API server (localhost is default)_                                                          |
-| `server_port`                    | _(Port your API server will listen on)_                                                                                 |
-| `rpc_node`                       | _[Network](https://docs.near.org/docs/concepts/networks) your server will be running on (testnet, mainnet, or betanet)_ |
-
-Example:
-
-```
-{
-   "master_account_id": "example.testnet",
-   "seed_phrase":  "seed phrase for testnet example account goes here",
-   "nft_contract": "nft-contract.example.testnet",
-   "server_host": "localhost",
-   "server_port": 3000,
-   "rpc_node": "https://rpc.testnet.near.org"
-}
-```
-
----
+# Contracts
 
 ## `/deploy`
 
@@ -120,17 +90,31 @@ _Deploys a smart contract to the NEAR blockchain based on the wasm file located 
 | `seed_phrase` _OR_ `private_key` | _Seed phrase or private key of the account id above (Use [`near login`](https://docs.near.org/docs/tools/near-cli#near-login) to save your key pair to your local machine)_ |
 | `contract`                       | _wasm file of compiled contract located in the `/contracts` folder of this project_                                                                                         |
 
+Example:
+
 ```
 {
     "account_id": "YOUR_ACCOUNT.testnet",
-    "seed_phrase":  "your seed phrase your seed phrase your seed phrase your seed phrase",
+    "seed_phrase":  "seed phrase for account_id above goes here",
     "contract": "nft_simple.wasm"
 }
 ```
 
+---
+
 ## `/view`
 
-POST `view`
+**Method:** **`POST`**
+
+_Performs a contract view call_
+
+| Param      | Description                                                                               |
+| ---------- | ----------------------------------------------------------------------------------------- |
+| `contract` | _Account id of the smart contract you are calling._                                       |
+| `method`   | _Name of the public method on the contract you are calling_                               |
+| `params`   | _Arguments the method of the contract takes. Pass an empty object if no args are needed._ |
+
+Example: 
 
 ```
 {
@@ -157,6 +141,48 @@ POST `call`
 }
 
 ```
+
+# Utils
+
+## `/init`
+
+**Method:** **`POST`**
+
+_Configures master account for "simple method" NFT examples below_
+
+| Param                            | Description                                                                                                             |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `master_account_id`              | _Master account that has full access to the NFT contract below_                                                         |
+| `seed_phrase` _OR_ `private_key` | _Use [`near login`](https://docs.near.org/docs/tools/near-cli#near-login) to save your key pair to your local machine_  |
+| `nft_contract`                   | _Contract account that has NFT contract deployed to it_                                                                 |
+| `server_host`                    | _Public IP address for your API server (localhost is default)_                                                          |
+| `server_port`                    | _(Port your API server will listen on)_                                                                                 |
+| `rpc_node`                       | _[Network](https://docs.near.org/docs/concepts/networks) your server will be running on (testnet, mainnet, or betanet)_ |
+
+Example:
+
+```
+{
+   "master_account_id": "example.testnet",
+   "seed_phrase":  "seed phrase for master_account_id goes here",
+   "nft_contract": "nft-contract.example.testnet",
+   "server_host": "localhost",
+   "server_port": 3000,
+   "rpc_node": "https://rpc.testnet.near.org"
+}
+```
+
+### Parse Seed Phrase
+
+POST `parse_seed_phrase`
+
+```
+{
+    "seed_phrase" : "your seed phrase your seed phrase your seed phrase your seed phrase"
+}
+```
+
+---
 
 ## NFTs
 
@@ -264,18 +290,6 @@ POST `nft`
 ```
 
 ---
-
-## Utils
-
-### Parse Seed Phrase
-
-POST `parse_seed_phrase`
-
-```
-{
-    "seed_phrase" : "your seed phrase your seed phrase your seed phrase your seed phrase"
-}
-```
 
 ### Faker data
 
