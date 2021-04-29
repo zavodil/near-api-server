@@ -56,12 +56,14 @@ Default settings:
 
 ```json
 {
-  "server_host": "localhost", // IP address for server
-  "server_port": 3000, // server port
-  "rpc_node": "https://rpc.testnet.near.org", // connected NEAR network (testnet, mainnet, or betanet)
-  "allow_rpc_update": false // determines if you can update rpc node address via init route
+  "server_host": "localhost",
+  "server_port": 3000,
+  "rpc_node": "https://rpc.testnet.near.org",
+  "allow_rpc_update": false
 }
 ```
+
+_**Note:** `allow_rpc_update` determines if this param can be changed via `/init` route._
 
 4. Start server
 
