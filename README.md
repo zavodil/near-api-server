@@ -162,9 +162,11 @@ Example:
 
 # Utils
 
+---
+
 ## `/init`
 
-> _Configures master account for use with "simple method" NFT examples._
+> _Configures `near-api-server.config.json` and creates a master account that stores credentials on the server. This allows for "simple methods" to be called where you won't have to pass as many parameters, primarily the master account id and private key or seed phrase._
 
 **Method:** **`POST`**
 
@@ -181,14 +183,22 @@ _**Note:** Use [`near login`](https://docs.near.org/docs/tools/near-cli#near-log
 
 Example:
 
-```
+```json
 {
-   "master_account_id": "example.testnet",
-   "seed_phrase":  "seed phrase for master_account_id goes here",
-   "nft_contract": "nft-contract.example.testnet",
-   "server_host": "localhost",
-   "server_port": 3000,
-   "rpc_node": "https://rpc.testnet.near.org"
+  "master_account_id": "example.testnet",
+  "seed_phrase": "seed phrase for master_account_id goes here",
+  "nft_contract": "nft-contract.example.testnet",
+  "server_host": "localhost",
+  "server_port": 3000,
+  "rpc_node": "https://rpc.testnet.near.org"
+}
+```
+
+Example Response:
+
+```json
+{
+  "text": "Settings updated."
 }
 ```
 
@@ -205,6 +215,8 @@ Example:
     "name" : "james"
 }
 ```
+
+_Requires [`/init`](#init) configuration with master account._
 
 ---
 
@@ -225,6 +237,8 @@ Example:
 ---
 
 # NFTs
+
+---
 
 ## `/mint_nft`
 
@@ -344,13 +358,13 @@ Example:
 
 ---
 
-## View NFT
+## `view_nft`
 
 ### Simple View NFT
 
-GET `nft/{token_id}`
+> _Receive detailed information about NFT._
 
-Receive information about NFT
+GET `view_nft/{token_id}`
 
 ### Standard View NFT
 
