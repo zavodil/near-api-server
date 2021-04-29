@@ -166,7 +166,7 @@ Example:
 
 ## `/init`
 
-> _Configures `near-api-server.config.json` and creates a master account that stores credentials on the server. This allows for "simple methods" to be called where you won't have to pass as many parameters, primarily the master account id and private key or seed phrase._
+> _Configures `near-api-server.config.json` and creates a master account that stores credentials in this file. This allows for "simple methods" to be called where you won't have to pass as many parameters, primarily the master account id and private key or seed phrase._
 
 **Method:** **`POST`**
 
@@ -230,7 +230,17 @@ Example:
 
 ```
 {
-    "seed_phrase" : "your seed phrase your seed phrase your seed phrase your seed phrase"
+    "seed_phrase" : "witch collapse practice feed shame open despair creek road again ice least"
+}
+```
+
+Example Response:
+
+```
+{
+    "seedPhrase": "witch collapse practice feed shame open despair creek road again ice least",
+    "secretKey": "ed25519:41oHMLtYygTsgwDzaMdjWRq48Sy9xJsitJGmMxgA9A7nvd65aT8vQwAvRdHi1nruPP47B6pNhW5T5TK8SsqCZmjn",
+    "publicKey": "ed25519:Cgg4i7ciid8uG4K5Vnjzy5N4PXLst5aeH9ApRAUA3y8U"
 }
 ```
 
