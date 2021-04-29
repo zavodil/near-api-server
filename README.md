@@ -1,4 +1,4 @@
-# NEAR API SERVER
+# NEAR REST API SERVER
 
 > Interact with the NEAR blockchain using a simple REST API.
 
@@ -10,8 +10,6 @@
 - [Node.js](https://nodejs.org/en/download/package-manager/)
 - [npm](https://www.npmjs.com/get-npm) or [Yarn](https://yarnpkg.com/getting-started/install)
 - API request tool such as [Postman](https://www.postman.com/downloads/)
-
-<br>
 
 # Setup
 
