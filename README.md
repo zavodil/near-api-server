@@ -377,6 +377,8 @@ Example Response:
 
 > _Configures `near-api-server.config.json` and creates a master account that stores credentials in this file. This allows for "simple methods" to be called where you won't have to pass as many parameters, primarily the master account id and private key or seed phrase._
 
+**ATTN: SERVER MUST BE RESTARTED AFTER CALLING THIS ENDPOINT**
+
 **Method:** **`POST`**
 
 | Param                            | Description                                                                                                             |
