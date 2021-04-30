@@ -6,16 +6,27 @@ const token = require('./token');
 const blockchain = require('./blockchain');
 const api = require('./api');
 const faker = require('faker');
-
+const crypto = require('crypto');
+const CatboxMemory = require('@hapi/catbox-memory');
 const Hapi = require('@hapi/hapi');
-let fs = require('fs');
+const fs = require('fs');
 
 const settings = JSON.parse(fs.readFileSync(api.CONFIG_PATH, 'utf8'));
+const ViewCacheExpirationInSeconds = 10;
+const ViewGenerateTimeoutInSeconds = 30;
 
 const init = async () => {
     const server = Hapi.server({
         port: settings.server_port,
         host: settings.server_host,
+        cache: [
+            {
+                name: 'near-api-cache',
+                provider: {
+                    constructor: CatboxMemory
+                }
+            }
+        ]
     });
 
     function processRequest(request) {
@@ -63,15 +74,21 @@ const init = async () => {
     server.route({
         method: 'POST',
         path: '/view',
-        handler: async (request) => {
+        handler: async (request, h) => {
             request = processRequest(request);
-            return await blockchain.View(
-                request.payload.contract,
-                request.payload.method,
-                request.payload.params
-            );
-        },
+
+            request.payload.request_name = "view";
+            return replyCachedValue(h, await server.methods.view(request.payload));
+        }
     });
+
+    server.method(
+        'view',
+        async (params) => await blockchain.View(
+            params.contract,
+            params.method,
+            params.params),
+        getServerMethodParams());
 
     server.route({
         method: 'POST',
@@ -155,10 +172,16 @@ const init = async () => {
     server.route({
         method: 'GET',
         path: '/view_nft/{token_id}',
-        handler: async (request) => {
-            return await token.ViewNFT(request.params.token_id);
+        handler: async (request, h) => {
+            request.params.request_name = "view_nft";
+            return replyCachedValue(h, await server.methods.viewNFT(request.params));
         },
     });
+
+    server.method(
+        'viewNFT',
+        async (params) => await token.ViewNFT(params.token_id),
+        getServerMethodParams());
 
     server.route({
         method: 'POST',
@@ -302,5 +325,26 @@ process.on('unhandledRejection', (err) => {
     console.log(err);
     process.exit(1);
 });
+
+const getServerMethodParams = () => {
+    return {
+        generateKey: (params) => {
+            let hash = crypto.createHash('sha1');
+            hash.update(JSON.stringify(params));
+            return hash.digest('base64');
+        },
+        cache: {
+            cache: 'near-api-cache',
+            expiresIn: ViewCacheExpirationInSeconds * 1000,
+            generateTimeout: ViewGenerateTimeoutInSeconds * 1000,
+            getDecoratedValue: true
+        }
+    }
+};
+
+const replyCachedValue = (h, {value, cached}) => {
+    const lastModified = cached ? new Date(cached.stored) : new Date();
+    return h.response(value).header('Last-Modified', lastModified.toUTCString());
+};
 
 init();
