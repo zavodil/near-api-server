@@ -18,7 +18,8 @@ _Click on a route for more information and examples_
 | **UTILS**                                  |        |                                                                                                                             |
 | [`/init`](#init)                           | POST   | Initializes the master account and updates `near-api-server-config.json`                                                    |
 | [`/create_user`](#create_user)             | POST   | Creates a NEAR [sub-account](https://docs.near.org/docs/concepts/account#subaccounts) and stores credentials in `/storage`. |
-| [`/parse_seed_phrase`](#parse_seed_phrase) | POST   | Displays public and private key pair from a given seed phrase .                                                             |
+| [`/parse_seed_phrase`](#parse_seed_phrase) | POST   | Displays public and private key pair from a given seed phrase.                                                              |
+| [`/balance`](#balance)                     | GET    | Displays account balance.                                                                                                   |
 |                                            |        |                                                                                                                             |
 | **NFT EXAMPLE**                            |        |                                                                                                                             |
 | [`/mint_nft`](#mint_nft)                   | POST   | Mints an NFT for a given contract.                                                                                          |
@@ -467,6 +468,26 @@ Example Response:
 
 ---
 
+## `/balance`
+
+> _Displays account balance in yoctoNEAR (10^-24 NEAR)._
+
+**Method:** **`GET`**
+
+Example:
+
+```
+http://localhost:3000/balance/name.testnet
+```
+
+Example Response:
+
+```
+199999959035075000000000000
+```
+
+---
+
 # NFTs
 
 ---
@@ -547,7 +568,7 @@ Example:
 }
 ```
 
-_(This creates `EXAMPLE_TOKEN_1`, `EXAMPLE_TOKEN_2`, & `EXAMPLE_TOKEN_3`)_
+_(This creates `EXAMPLE_TOKEN_31`, `EXAMPLE_TOKEN_32`, & `EXAMPLE_TOKEN_33`)_
 
 Example Response:
 
@@ -685,6 +706,8 @@ Example response:
 ### Simple View NFT
 
 > _Receive detailed information about NFT using URL params. Requires [`/init`](#init) configuration with master account._
+
+**Method:** **`GET`**
 
 Example:
 
