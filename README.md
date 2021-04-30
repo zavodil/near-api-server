@@ -482,9 +482,9 @@ Example:
 ```
 {
     "token_id": "EXAMPLE-TOKEN",
-    "metadata": "",
-    "account_id": "YOUR_ACCOUNT.testnet",
-    "private_key": "YOUR_PRIVATE_KEY",
+    "metadata": "https://ipfs.io/ipfs/Qme7ss3ARVgxv6rXqVPiikMJ8u2NLgmgszg13pYrDKEoiu",
+    "account_id": "example.testnet",
+    "private_key": "41oHMLtYygTsgwDzaMdjWRq48Sy9xJsitJGmMxgA9A7nvd65aT8vQwAvRdHi1nruPP47B6pNhW5T5TK8SsqCZmjn",
     "contract": "nft.example.near",
 }
 ```
@@ -497,8 +497,8 @@ Example:
 
 ```json
 {
-  "token_id": "EX_COIN",
-  "metadata": "Example coin going to the moon!"
+  "token_id": "EXAMPLE_TOKEN",
+  "metadata": "https://ipfs.io/ipfs/Qme7ss3ARVgxv6rXqVPiikMJ8u2NLgmgszg13pYrDKEoiu"
 }
 ```
 
@@ -508,12 +508,12 @@ Example Response:
 [
   {
     "token": {
-      "owner_id": "gogo.testnet",
-      "metadata": "Example coin going to the moon!",
+      "owner_id": "example.testnet",
+      "metadata": "https://ipfs.io/ipfs/Qme7ss3ARVgxv6rXqVPiikMJ8u2NLgmgszg13pYrDKEoiu",
       "approved_account_ids": [],
-      "token_id": "EX_COIN"
+      "token_id": "EXAMPLE_TOKEN"
     },
-    "tx": "6afwxVHRmADCQzSvFtvUpQJYVNF3UG8cWggYTqDgCHJb"
+    "tx": "Be7tV1h2dvhg53S2rartojeSUbNfQTB7ypuprmb6xRhw"
   }
 ]
 ```
@@ -526,29 +526,34 @@ Example:
 
 ```json
 {
-  "token_id": "EXAMPLE_{inc}",
-  "metadata": "",
-  "min": 21,
-  "max": 23
+  "token_id": "EXAMPLE_TOKEN_{inc}",
+  "metadata": "https://ipfs.io/ipfs/Qme7ss3ARVgxv6rXqVPiikMJ8u2NLgmgszg13pYrDKEoiu",
+  "min": 31,
+  "max": 33
 }
 ```
+
+
+_(This creates EXAMPLE\_TOKEN\_1, EXAMPLE\_TOKEN\_2, & EXAMPLE\_TOKEN\_3)_
 
 Example Response:
 
 ```json
 [
-    {
-        "tx": "GHAuj47w7bgNbtmkaiVCPqGTB6YkvM1Zp8Aa4Av8yuu4"
-    },
-    {
-        "tx": "7qdDrUz89hPkRAHwaxv8UiADBBvQuEyxmvDRgcB45hN4"
-    },
-    {
-        "tx": "8Hv7ga2iMTqC1B6oMXiTnhiGXFR9vor58UqTzwdbo93T"
-    }
+  {
+    "tx": "mAL92gb6g6hhubZBRewJk5vSwmmzm2SXmwdAfYqfWcG"
+  },
+  {
+    "tx": "Dv9h8nWJLujkKpmw58ZR4QwAgPVprb4j5QarDUumoGEX"
+  },
+  {
+    "tx": "J48F3vALJBbbUguKXp6e16g5vKVwzC2LtVBpsfEVFpYa"
+  }
 ]
+```
 
-This will create 3 NFTs: `test_21`, `test_22` and `test_23`.
+_(Above response are transaction hashes that can be queried in [NEAR Explorer](http://explorer.testnet.near.org))_
+
 
 ---
 
@@ -649,4 +654,7 @@ If some value equals to the following tag then value will be filled with the ran
 Video Presentation:
 
 [![Live App Review 15 - NFT Server Side API](https://img.youtube.com/vi/d71OscmH4cA/0.jpg)](https://youtu.be/d71OscmH4cA)
+
+```
+
 ```
