@@ -8,22 +8,22 @@
 
 _Click on a route for more information and examples_
 
-| Route                                      | Method | Description                                                          |
-| ------------------------------------------ | ------ | -------------------------------------------------------------------- |
-| **CONTRACTS**                              |        |                                                                      |
-| [`/deploy`](#deploy)                       | POST   | Deploys a smart contract on NEAR.                                    |
-| [`/view`](#view)                           | POST   | Performs a smart contract view call.                                 |
-| [`/call`](#call)                           | POST   | Performs a smart contract change call.                               |
-|                                            |        |                                                                      |
-| **UTILS**                                  |        |                                                                      |
-| [`/init`](#init)                           | POST   | sets up the master account and updates `near-api-server-config.json` |
-| [`/create_user`](#create_user)             | POST   | Creates a NEAR account and stores credentials in /storage            |
-| [`/parse_seed_phrase`](#parse_seed_phrase) | POST   | displays public and private key pair from a given seed phrase        |
-|                                            |        |                                                                      |
-| **NFT Ex. CONTRACT**                       |        |                                                                      |
-| [`/mint_nft`](#mint_nft)                   | POST   | Mints an NFT on deployed contract.                                   |
-| [`/transfer_nft`](#transfer_nft)           | POST   | Transfers NFT ownership to a specified account.                      |
-| [`/view_nft`](#view_nft)                   | POST   | View details of an NFT.                                              |
+| Route                                      | Method | Description                                                                                                                 |
+| ------------------------------------------ | ------ | --------------------------------------------------------------------------------------------------------------------------- |
+| **CONTRACTS**                              |        |                                                                                                                             |
+| [`/deploy`](#deploy)                       | POST   | Deploys a smart contract on NEAR.                                                                                           |
+| [`/view`](#view)                           | POST   | Performs a smart contract **view** call with no gas burnt.                                                                  |
+| [`/call`](#call)                           | POST   | Performs a smart contract **change** call that burns gas.                                                                   |
+|                                            |        |                                                                                                                             |
+| **UTILS**                                  |        |                                                                                                                             |
+| [`/init`](#init)                           | POST   | Initializes the master account and updates `near-api-server-config.json`                                                    |
+| [`/create_user`](#create_user)             | POST   | Creates a NEAR [sub-account](https://docs.near.org/docs/concepts/account#subaccounts) and stores credentials in `/storage`. |
+| [`/parse_seed_phrase`](#parse_seed_phrase) | POST   | Displays public and private key pair from a given seed phrase .                                                             |
+|                                            |        |                                                                                                                             |
+| **NFT Ex. CONTRACT**                       |        |                                                                                                                             |
+| [`/mint_nft`](#mint_nft)                   | POST   | Mints an NFT for a given contract.                                                                                          |
+| [`/transfer_nft`](#transfer_nft)           | POST   | Transfers NFT ownership to a specified account.                                                                             |
+| [`/view_nft`](#view_nft)                   | POST   | Returns owner, metadata, and approved account IDs for a given token ID.                                                     |
 
 ---
 
