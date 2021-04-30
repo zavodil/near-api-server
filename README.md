@@ -495,11 +495,27 @@ _Requires [`/init`](#init) configuration with master account._
 
 Example:
 
-```
+```json
 {
-    "token_id": "007",
-    "metadata": "Golden Eye"
+  "token_id": "EX_COIN",
+  "metadata": "Example coin going to the moon!"
 }
+```
+
+Example Response:
+
+```json
+[
+  {
+    "token": {
+      "owner_id": "gogo.testnet",
+      "metadata": "Example coin going to the moon!",
+      "approved_account_ids": [],
+      "token_id": "EX_COIN"
+    },
+    "tx": "6afwxVHRmADCQzSvFtvUpQJYVNF3UG8cWggYTqDgCHJb"
+  }
+]
 ```
 
 ### Batch NFT minting (simple)
@@ -508,14 +524,29 @@ _Requires [`/init`](#init) configuration with master account._
 
 Example:
 
-```
+```json
 {
-    "token_id": "test_{inc}",
-    "metadata": "",
-    "min": 21,
-    "max": 23
+  "token_id": "EXAMPLE_{inc}",
+  "metadata": "",
+  "min": 21,
+  "max": 23
 }
 ```
+
+Example Response:
+
+```json
+[
+    {
+        "tx": "GHAuj47w7bgNbtmkaiVCPqGTB6YkvM1Zp8Aa4Av8yuu4"
+    },
+    {
+        "tx": "7qdDrUz89hPkRAHwaxv8UiADBBvQuEyxmvDRgcB45hN4"
+    },
+    {
+        "tx": "8Hv7ga2iMTqC1B6oMXiTnhiGXFR9vor58UqTzwdbo93T"
+    }
+]
 
 This will create 3 NFTs: `test_21`, `test_22` and `test_23`.
 
@@ -523,7 +554,7 @@ This will create 3 NFTs: `test_21`, `test_22` and `test_23`.
 
 ## `/transfer_nft`
 
-> _Transfers ownership of NFT from specified contract on behalf of provided `enforece_owner_if` signed with `owner_private_key`._
+> _Transfers ownership of NFT from specified contract on behalf of provided `enforce_owner_id` signed with `owner_private_key`._
 
 **Method:** **`POST`**
 
@@ -543,14 +574,16 @@ _**Note:** Use [`near login`](https://docs.near.org/docs/tools/near-cli#near-log
 Example:
 
 ```
+
 {
-    "token_id": "007",
-    "receiver_id": "james.YOUR_ACCOUNT.testnet",
-    "enforce_owner_id": "YOUR_ACCOUNT.testnet",
-    "memo": "Welcome gift",
-    "owner_private_key": "YOUR_PRIVATE_KEY",
-    "contract": "nft.something.near"
+"token_id": "007",
+"receiver_id": "james.YOUR_ACCOUNT.testnet",
+"enforce_owner_id": "YOUR_ACCOUNT.testnet",
+"memo": "Welcome gift",
+"owner_private_key": "YOUR_PRIVATE_KEY",
+"contract": "nft.something.near"
 }
+
 ```
 
 ### Simple Transfer NFTs
@@ -567,12 +600,14 @@ Example:
 Example:
 
 ```
+
 {
-    "token_id": "007",
-    "receiver_id": "james.YOUR_ACCOUNT.testnet",
-    "enforce_owner_id": "YOUR_ACCOUNT.testnet",
-    "memo": "Welcome gift"
+"token_id": "007",
+"receiver_id": "james.YOUR_ACCOUNT.testnet",
+"enforce_owner_id": "YOUR_ACCOUNT.testnet",
+"memo": "Welcome gift"
 }
+
 ```
 
 ---
@@ -590,10 +625,12 @@ GET `view_nft/{token_id}`
 POST `nft`
 
 ```
+
 {
-	"token_id": "test_123",
-	"contract": "nft.something.near"
+"token_id": "test_123",
+"contract": "nft.something.near"
 }
+
 ```
 
 ---
@@ -612,3 +649,4 @@ If some value equals to the following tag then value will be filled with the ran
 Video Presentation:
 
 [![Live App Review 15 - NFT Server Side API](https://img.youtube.com/vi/d71OscmH4cA/0.jpg)](https://youtu.be/d71OscmH4cA)
+```
