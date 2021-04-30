@@ -20,7 +20,7 @@ _Click on a route for more information and examples_
 | [`/create_user`](#create_user)             | POST   | Creates a NEAR [sub-account](https://docs.near.org/docs/concepts/account#subaccounts) and stores credentials in `/storage`. |
 | [`/parse_seed_phrase`](#parse_seed_phrase) | POST   | Displays public and private key pair from a given seed phrase .                                                             |
 |                                            |        |                                                                                                                             |
-| **NFT Ex. CONTRACT**                       |        |                                                                                                                             |
+| **NFT EXAMPLE**                            |        |                                                                                                                             |
 | [`/mint_nft`](#mint_nft)                   | POST   | Mints an NFT for a given contract.                                                                                          |
 | [`/transfer_nft`](#transfer_nft)           | POST   | Transfers NFT ownership to a specified account.                                                                             |
 | [`/view_nft`](#view_nft)                   | POST   | Returns owner, metadata, and approved account IDs for a given token ID.                                                     |
@@ -582,7 +582,7 @@ _(Above response are transaction hashes that can be queried in [NEAR Explorer](h
 | `token_id`          | _Token ID of the token being transferred_                 |
 | `receiver_id`       | _Account ID taking ownership of the NFT_                  |
 | `enforce_owner_id`  | _Account ID for the account that currently owns the NFT._ |
-| `memo`              | _Optional message to new token holder._                   |
+| `memo`              | _Optional message to the new token holder._               |
 | `owner_private_key` | _Private key of the `enforce_owner_id`._                  |
 | `nft_contract`      | _NFT contract that the token being transferred is on._    |
 
@@ -613,6 +613,8 @@ Example Response:
 ```
 
 _(`tx` is the transaction hash that can be queried in [NEAR Explorer](http://explorer.testnet.near.org))_
+
+---
 
 ### Simple Transfer NFTs
 
@@ -677,6 +679,8 @@ Example response:
   "approved_account_ids": []
 }
 ```
+
+---
 
 ### Simple View NFT
 
