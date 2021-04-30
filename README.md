@@ -473,7 +473,7 @@ Example Response:
 
 ## `/mint_nft`
 
-> _Mints a new NFT for specified contract._
+> _Mints a new NFT on a specified contract._
 
 **Method:** **`POST`**
 
@@ -529,6 +529,8 @@ Example Response:
   }
 ]
 ```
+
+_(`tx` is the transaction hash that can be queried in [NEAR Explorer](http://explorer.testnet.near.org))_
 
 ### Batch NFT minting (simple)
 
@@ -588,18 +590,29 @@ _**Note:** Use [`near login`](https://docs.near.org/docs/tools/near-cli#near-log
 
 Example:
 
-```
-
+```json
 {
-"token_id": "007",
-"receiver_id": "james.YOUR_ACCOUNT.testnet",
-"enforce_owner_id": "YOUR_ACCOUNT.testnet",
-"memo": "Welcome gift",
-"owner_private_key": "YOUR_PRIVATE_KEY",
-"contract": "nft.something.near"
+  "token_id": "EXAMPLE-TOKEN",
+  "receiver_id": "receiver.testnet",
+  "enforce_owner_id": "example.testnet",
+  "memo": "Here's a token I thought you might like! :)",
+  "owner_private_key": "YOUR_PRIVATE_KEY",
+  "contract": "nft.example.near"
 }
-
 ```
+
+Example Response:
+
+```json
+{
+  "owner_id": "receiver.testnet",
+  "metadata": "https://ipfs.io/ipfs/Qme7ss3ARVgxv6rXqVPiikMJ8u2NLgmgszg13pYrDKEoiu",
+  "approved_account_ids": [],
+  "tx": "5WdNgmNeA5UNpSMDRXemwJc95MB6J22LcvAaimuN5YzF"
+}
+```
+
+_(`tx` is the transaction hash that can be queried in [NEAR Explorer](http://explorer.testnet.near.org))_
 
 ### Simple Transfer NFTs
 
@@ -614,16 +627,27 @@ Example:
 
 Example:
 
-```
-
+```json
 {
-"token_id": "007",
-"receiver_id": "james.YOUR_ACCOUNT.testnet",
-"enforce_owner_id": "YOUR_ACCOUNT.testnet",
-"memo": "Welcome gift"
+  "token_id": "EXAMPLE-TOKEN",
+  "receiver_id": "receiver.testnet",
+  "enforce_owner_id": "example.testnet",
+  "memo": "Here's a token I thought you might like! :)"
 }
-
 ```
+
+Example Response:
+
+```json
+{
+  "owner_id": "receiver.testnet",
+  "metadata": "https://ipfs.io/ipfs/Qme7ss3ARVgxv6rXqVPiikMJ8u2NLgmgszg13pYrDKEoiu",
+  "approved_account_ids": [],
+  "tx": "5WdNgmNeA5UNpSMDRXemwJc95MB6J22LcvAaimuN5YzF"
+}
+```
+
+_(`tx` is the transaction hash that can be queried in [NEAR Explorer](http://explorer.testnet.near.org))_
 
 ---
 
