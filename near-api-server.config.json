@@ -1,1 +1,6 @@
-{"server_host":"localhost","server_port":3000,"rpc_node":"https://rpc.testnet.near.org","allow_rpc_update":false,"master_account_id":"gogo.testnet","master_key":"ed25519:41oHMLtYygTsgwDzaMdjWRq48Sy9xJsitJGmMxgA9A7nvd65aT8vQwAvRdHi1nruPP47B6pNhW5T5TK8SsqCZmjn","nft_contract":"gogo.testnet"}
+{
+  "server_host": "localhost",
+  "server_port": 3000,
+  "rpc_node": "https://rpc.testnet.near.org",
+  "allow_rpc_update": false
+}
