@@ -617,26 +617,6 @@ Example:
 
 ## `view_nft`
 
-### Simple View NFT
-
-> _Receive detailed information about NFT using URL params. Requires [`/init`](#init) configuration with master account._
-
-**Method:** **`GET`**
-
-Example:
-
-`http://localhost:3000/view_nft/EXAMPLE-TOKEN`
-
-Example Response:
-
-```json
-{
-  "owner_id": "example.testnet",
-  "metadata": "https://ipfs.io/ipfs/Qme7ss3ARVgxv6rXqVPiikMJ8u2NLgmgszg13pYrDKEoiu",
-  "approved_account_ids": []
-}
-```
-
 ### Standard View NFT
 
 > _Returns owner, metadata, and approved account IDs for a given token ID._
@@ -662,19 +642,37 @@ Example response:
 }
 ```
 
+### Simple View NFT
+
+> _Receive detailed information about NFT using URL params. Requires [`/init`](#init) configuration with master account._
+
+Example:
+
+`http://localhost:3000/view_nft/EXAMPLE-TOKEN`
+
+Example Response:
+
+```json
+{
+  "owner_id": "example.testnet",
+  "metadata": "https://ipfs.io/ipfs/Qme7ss3ARVgxv6rXqVPiikMJ8u2NLgmgszg13pYrDKEoiu",
+  "approved_account_ids": []
+}
+```
+
 ---
 
-### Faker data
+## Faker data
 
-If some value equals to the following tag then value will be filled with the random value:
+> Use the following tags below to use random data for testing purposes.
 
-- {username}
-- {number}
-- {word}
-- {words}
-- {image}
-- {color}
+- `{username}`
+- `{number}`
+- `{word}`
+- `{words}`
+- `{image}`
+- `{color}`
 
-Video Presentation:
+## Video Presentation
 
 [![Live App Review 15 - NFT Server Side API](https://img.youtube.com/vi/d71OscmH4cA/0.jpg)](https://youtu.be/d71OscmH4cA)
