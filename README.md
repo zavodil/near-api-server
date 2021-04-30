@@ -417,17 +417,27 @@ Example Response:
 
 ## `/create_user`
 
-> _Creates a NEAR account using initialized master account and saves to `/storage` directory._
+> _Creates a NEAR [sub-account](https://docs.near.org/docs/concepts/account#subaccounts) using initialized master account and saves credentials to `/storage` directory. Requires [`/init`](#init) configuration with master account._
+
+**Note:** _Only letters, digits, and - or _ separators are allowed.\_
 
 **Method:** **`POST`**
 
+Example:
+
 ```
 {
-    "name" : "james"
+    "name" : "satoshi"
 }
 ```
 
-_Requires [`/init`](#init) configuration with master account._
+Example Response:
+
+```json
+{
+  "text": "Account satoshi.example.testnet created. Public key: ed25519:HW4koiHqLi5WdVHWy9fqBWHbLRrzfmvCiRAUVhMa14T2"
+}
+```
 
 ---
 
