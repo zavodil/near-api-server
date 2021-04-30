@@ -419,7 +419,7 @@ Example Response:
 
 > _Creates a NEAR [sub-account](https://docs.near.org/docs/concepts/account#subaccounts) using initialized master account and saves credentials to `/storage` directory. Requires [`/init`](#init) configuration with master account._
 
-**Note:** _Only letters, digits, and - or _ separators are allowed.\_
+**Note:** _Only letters, digits, and - or \_ separators are allowed._
 
 **Method:** **`POST`**
 
@@ -545,7 +545,7 @@ Example:
 }
 ```
 
-_(This creates EXAMPLE_TOKEN_1, EXAMPLE_TOKEN_2, & EXAMPLE_TOKEN_3)_
+_(This creates `EXAMPLE_TOKEN_1`, `EXAMPLE_TOKEN_2`, & `EXAMPLE_TOKEN_3`)_
 
 Example Response:
 
