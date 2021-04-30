@@ -10,35 +10,35 @@ const faker = require('faker');
 const Hapi = require('@hapi/hapi');
 let fs = require('fs');
 
-
 const settings = JSON.parse(fs.readFileSync(api.CONFIG_PATH, 'utf8'));
 
 const init = async () => {
-
     const server = Hapi.server({
         port: settings.server_port,
-        host: settings.server_host
+        host: settings.server_host,
     });
 
     function processRequest(request) {
         Object.keys(request.payload).map((key) => {
             switch (request.payload[key]) {
-                case "{username}":
-                    request.payload[key] = faker.internet.userName().replace(/[^0-9a-z]/gi, '');
+                case '{username}':
+                    request.payload[key] = faker.internet
+                        .userName()
+                        .replace(/[^0-9a-z]/gi, '');
                     break;
-                case "{color}":
+                case '{color}':
                     request.payload[key] = faker.internet.color();
                     break;
-                case "{number}":
+                case '{number}':
                     request.payload[key] = faker.random.number();
                     break;
-                case "{word}":
+                case '{word}':
                     request.payload[key] = faker.random.word();
                     break;
-                case "{words}":
+                case '{words}':
                     request.payload[key] = faker.random.words();
                     break;
-                case "{image}":
+                case '{image}':
                     request.payload[key] = faker.random.image();
                     break;
             }
@@ -51,11 +51,13 @@ const init = async () => {
         method: 'GET',
         path: '/',
         handler: () => {
-            return api.notify('Welcome to NEAR API! ' +
+            return api.notify(
+                'Welcome to NEAR API! ' +
                 (!settings.master_account_id
-                    ? "Please initialize your NEAR account in order to use simple nft mint/transfer methods"
-                    : `Master Account: ${settings.master_account_id}`));
-        }
+                    ? 'Please initialize your NEAR account in order to use simple nft mint/transfer methods'
+                    : `Master Account: ${settings.master_account_id}`)
+            );
+        },
     });
 
     server.route({
@@ -63,8 +65,12 @@ const init = async () => {
         path: '/view',
         handler: async (request) => {
             request = processRequest(request);
-            return await blockchain.View(request.payload.contract, request.payload.method, request.payload.params);
-        }
+            return await blockchain.View(
+                request.payload.contract,
+                request.payload.method,
+                request.payload.params
+            );
+        },
     });
 
     server.route({
@@ -72,9 +78,25 @@ const init = async () => {
         path: '/call',
         handler: async (request) => {
             request = processRequest(request);
-            let {account_id, private_key, attached_tokens, attached_gas, contract, method, params} = request.payload;
-            return await blockchain.Call(account_id, private_key, attached_tokens, attached_gas, contract, method, params);
-        }
+            let {
+                account_id,
+                private_key,
+                attached_tokens,
+                attached_gas,
+                contract,
+                method,
+                params,
+            } = request.payload;
+            return await blockchain.Call(
+                account_id,
+                private_key,
+                attached_tokens,
+                attached_gas,
+                contract,
+                method,
+                params
+            );
+        },
     });
 
     server.route({
@@ -82,23 +104,38 @@ const init = async () => {
         path: '/init',
         handler: async (request) => {
             request = processRequest(request);
-            let {master_account_id, seed_phrase, private_key, nft_contract, server_host, server_port, rpc_node} = request.payload;
+            let {
+                master_account_id,
+                seed_phrase,
+                private_key,
+                nft_contract,
+                server_host,
+                server_port,
+                rpc_node,
+            } = request.payload;
 
-            if(seed_phrase)
-                private_key =  (await user.GetKeysFromSeedPhrase(seed_phrase)).secretKey;
+            if (seed_phrase)
+                private_key = (await user.GetKeysFromSeedPhrase(seed_phrase)).secretKey;
 
-            let response = await blockchain.Init(master_account_id, private_key, nft_contract, server_host, server_port, rpc_node);
+            let response = await blockchain.Init(
+                master_account_id,
+                private_key,
+                nft_contract,
+                server_host,
+                server_port,
+                rpc_node
+            );
             if (!response.error) {
                 process.on('SIGINT', function () {
                     console.log('Stopping server...');
-                    server.stop({ timeout: 1000 }).then(async function () {
+                    server.stop({timeout: 1000}).then(async function () {
                         await server.start();
-                    })
-                })
+                    });
+                });
             }
 
             return response;
-        }
+        },
     });
 
     server.route({
@@ -108,28 +145,30 @@ const init = async () => {
             request = processRequest(request);
             let {account_id, private_key, seed_phrase, contract} = request.payload;
 
-            if(seed_phrase)
-                private_key =  (await user.GetKeysFromSeedPhrase(seed_phrase)).secretKey;
+            if (seed_phrase)
+                private_key = (await user.GetKeysFromSeedPhrase(seed_phrase)).secretKey;
 
             return await blockchain.DeployContract(account_id, private_key, contract);
-        }
+        },
     });
-
 
     server.route({
         method: 'GET',
         path: '/view_nft/{token_id}',
         handler: async (request) => {
             return await token.ViewNFT(request.params.token_id);
-        }
+        },
     });
 
     server.route({
         method: 'POST',
-        path: '/view_nft/',
+        path: '/view_nft',
         handler: async (request) => {
-            return await token.ViewNFT(request.payload.token_id, request.payload.contract);
-        }
+            return await token.ViewNFT(
+                request.payload.token_id,
+                request.payload.contract
+            );
+        },
     });
 
     server.route({
@@ -138,27 +177,41 @@ const init = async () => {
         handler: async (request) => {
             request = processRequest(request);
 
-            const name = (request.payload.name + "." + settings.master_account_id).toLowerCase();
+            const name = (
+                request.payload.name +
+                '.' +
+                settings.master_account_id
+            ).toLowerCase();
             let account = await user.CreateKeyPair(name);
 
             let status = await user.CreateAccount(account);
 
             if (status)
-                return {text: `Account ${name} created. Public key: ${account.public_key}`};
-            else
-                return {text: "Error"};
-        }
+                return {
+                    text: `Account ${name} created. Public key: ${account.public_key}`,
+                };
+            else return {text: 'Error'};
+        },
     });
 
     server.route({
         method: 'POST',
         path: '/parse_seed_phrase',
-        handler: async (request, h) => {
+        handler: async (request) => {
             request = processRequest(request);
 
             return await user.GetKeysFromSeedPhrase(request.payload.seed_phrase);
+        },
+    });
+
+    server.route({
+        method: 'GET',
+        path: '/balance/{account_id}',
+        handler: async (request) => {
+            return await blockchain.GetBalance(request.params.account_id);
         }
     });
+
 
     server.route({
         method: 'POST',
@@ -166,33 +219,38 @@ const init = async () => {
         handler: async (request) => {
             let {min, max} = request.payload;
 
-            if (!min || !max)
-                min = max = 0;
+            if (!min || !max) min = max = 0;
             let response = [];
 
             request = processRequest(request);
             for (let i = min; i <= max; i++) {
-                const tokenId = request.payload.token_id.replace("{inc}", i);
+                const tokenId = request.payload.token_id.replace('{inc}', i);
 
                 let {account_id, private_key, metadata, contract} = request.payload;
 
-                const tx = await token.MintNFT(tokenId, metadata, contract, account_id, private_key);
+                const tx = await token.MintNFT(
+                    tokenId,
+                    metadata,
+                    contract,
+                    account_id,
+                    private_key
+                );
 
                 if (tx) {
                     if (min === max) {
                         let create_token = await token.ViewNFT(tokenId, account_id);
                         create_token.token_id = tokenId;
-                        response.push({token: create_token, tx: tx})
+                        response.push({token: create_token, tx: tx});
                     } else {
-                        response.push({tx: tx})
+                        response.push({tx: tx});
                     }
                 } else {
-                    response.push({text: "Error. Check backend logs."});
+                    response.push({text: 'Error. Check backend logs.'});
                 }
             }
 
             return response;
-        }
+        },
     });
 
     server.route({
@@ -201,23 +259,39 @@ const init = async () => {
         handler: async (request, h) => {
             request = processRequest(request);
 
-            let {token_id, receiver_id, enforce_owner_id, memo, contract, owner_private_key} = request.payload;
+            let {
+                token_id,
+                receiver_id,
+                enforce_owner_id,
+                memo,
+                contract,
+                owner_private_key,
+            } = request.payload;
 
-            const txStatus = await token.TransferNFT(token_id, receiver_id, enforce_owner_id, memo, contract, owner_private_key);
+            const txStatus = await token.TransferNFT(
+                token_id,
+                receiver_id,
+                enforce_owner_id,
+                memo,
+                contract,
+                owner_private_key
+            );
 
             if (txStatus.error) {
                 return txStatus;
             } else if (txStatus.status.Failure) {
-                return {error: "Because of some reason transaction was not applied as expected"}
+                return {
+                    error:
+                        'Because of some reason transaction was not applied as expected',
+                };
             } else {
                 const new_token = await token.ViewNFT(token_id, contract);
-                if (!new_token)
-                    return api.reject("Token not found");
+                if (!new_token) return api.reject('Token not found');
 
                 new_token.tx = txStatus.transaction.hash;
                 return new_token;
             }
-        }
+        },
     });
 
     await server.start();
@@ -230,4 +304,3 @@ process.on('unhandledRejection', (err) => {
 });
 
 init();
-

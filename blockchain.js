@@ -1,6 +1,7 @@
 const nearApi = require('near-api-js');
 const api = require('./api');
 const fs = require('fs');
+const fetch = require('node-fetch');
 
 const settings = JSON.parse(fs.readFileSync(api.CONFIG_PATH, 'utf8'));
 
@@ -41,6 +42,36 @@ module.exports = {
             }));
 
             return api.notify("Settings updated.");
+        } catch (e) {
+            return api.reject(e);
+        }
+    },
+
+    GetBalance: async function (account_id) {
+        try {
+            const body = {
+                jsonrpc: '2.0',
+                id: "dontcare",
+                method: "query",
+                params: {
+                    request_type: "view_account",
+                    finality: "final",
+                    account_id: account_id
+                }
+            };
+
+            return fetch(settings.rpc_node, {
+                method: 'post',
+                body: JSON.stringify(body),
+                headers: {'Content-Type': 'application/json'}
+            })
+                .then(res => res.json())
+                .then(json => {
+                    if (json.error)
+                        return api.reject(json.error.data);
+
+                    return json.result.amount
+                });
         } catch (e) {
             return api.reject(e);
         }

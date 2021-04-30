@@ -1,6 +1,6 @@
 {
-    "server_host": "localhost",
-    "server_port": "PORT",
-    "rpc_node": "https://rpc.testnet.near.org",
-    "allow_rpc_update": false
+  "server_host": "localhost",
+  "server_port": 3000,
+  "rpc_node": "https://rpc.testnet.near.org",
+  "allow_rpc_update": false
 }
