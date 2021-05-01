@@ -100,7 +100,9 @@ Example:
 }
 ```
 
-Example Response:
+<details>
+<summary><strong>Example Response:</strong> </summary>
+<p>
 
 ```json
 {
@@ -175,6 +177,9 @@ Example Response:
 }
 ```
 
+</p>
+</details>
+
 ---
 
 ## `/view`
@@ -199,7 +204,9 @@ Example:
 }
 ```
 
-Example Response:
+<details>
+<summary><strong>Example Response:</strong> </summary>
+<p>
 
 ```json
 [
@@ -236,6 +243,9 @@ Example Response:
 ]
 ```
 
+</p>
+</details>
+
 ---
 
 ## `/call`
@@ -270,7 +280,10 @@ Example:
 }
 ```
 
-Example Response:
+
+<details>
+<summary><strong>Example Response:</strong> </summary>
+<p>
 
 ```json
 {
@@ -367,6 +380,9 @@ Example Response:
   ]
 }
 ```
+
+</p>
+</details>
 
 ---
 
@@ -535,7 +551,9 @@ Example:
 }
 ```
 
-Example Response:
+<details>
+<summary><strong>Example Response:</strong> </summary>
+<p>
 
 ```json
 [
@@ -551,7 +569,12 @@ Example Response:
 ]
 ```
 
+</p>
+</details>
+
 _(`tx` is the transaction hash that can be queried in [NEAR Explorer](http://explorer.testnet.near.org))_
+
+---
 
 ### Batch NFT minting (simple)
 
@@ -570,7 +593,9 @@ Example:
 
 _(This creates `EXAMPLE_TOKEN_31`, `EXAMPLE_TOKEN_32`, & `EXAMPLE_TOKEN_33`)_
 
-Example Response:
+<details>
+<summary><strong>Example Response:</strong> </summary>
+<p>
 
 ```json
 [
@@ -585,6 +610,9 @@ Example Response:
   }
 ]
 ```
+
+</p>
+</details>
 
 _(Above response are transaction hashes that can be queried in [NEAR Explorer](http://explorer.testnet.near.org))_
 
