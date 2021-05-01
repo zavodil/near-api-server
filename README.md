@@ -555,7 +555,6 @@ Example:
 <summary><strong>Example Response:</strong> </summary>
 <p>
 
-
 ```json
 [
   {
@@ -574,6 +573,8 @@ Example:
 </details>
 
 _(`tx` is the transaction hash that can be queried in [NEAR Explorer](http://explorer.testnet.near.org))_
+
+---
 
 ### Batch NFT minting (simple)
 
