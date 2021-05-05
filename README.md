@@ -20,6 +20,7 @@ _Click on a route for more information and examples_
 | [`/create_user`](#create_user)             | POST   | Creates a NEAR [sub-account](https://docs.near.org/docs/concepts/account#subaccounts) and stores credentials in `/storage`. |
 | [`/parse_seed_phrase`](#parse_seed_phrase) | POST   | Displays public and private key pair from a given seed phrase.                                                              |
 | [`/balance`](#balance)                     | GET    | Displays account balance.                                                                                                   |
+| [`/keypair`](#keypair)                     | GET    | Generates Ed25519 key pair.                                                                                                 |
 |                                            |        |                                                                                                                             |
 | **NFT EXAMPLE**                            |        |                                                                                                                             |
 | [`/mint_nft`](#mint_nft)                   | POST   | Mints an NFT for a given contract.                                                                                          |
@@ -500,6 +501,29 @@ Example Response:
 
 ```
 199999959035075000000000000
+```
+
+---
+
+## `/keypair`
+
+> _Generates Ed25519 key pair._
+
+**Method:** **`GET`**
+
+Example:
+
+```
+http://localhost:3000/keypair
+```
+
+Example Response:
+
+```
+{
+  "public_key": "ed25519:3pNJK3fwP14UEbPjQqgDASwWR4XmbAEQBeNsyThhtNKY",
+  "private_key": "3s9nVrCU4MER3w9cxXcJM58RGRzFNJnLzo9vgQiNrkuGW3Xp7Up6cYnY4JKQZ7Qp3GhmXckrApRyDPAfzo2oCm8a"
+}
 ```
 
 ---

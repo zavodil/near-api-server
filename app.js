@@ -235,6 +235,13 @@ const init = async () => {
         }
     });
 
+    server.route({
+        method: 'GET',
+        path: '/keypair',
+        handler: async () => {
+            return await user.GenerateKeyPair();
+        }
+    });
 
     server.route({
         method: 'POST',
