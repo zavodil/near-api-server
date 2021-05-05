@@ -2,6 +2,10 @@
 
 > Interact with the NEAR blockchain using a simple REST API.
 
+###### Live Demo:
+* [REST API Endpoint for NEAR Testnet](https://rest.nearapi.org) 
+* [Web Console for `view`/`call` requests](https://web.nearapi.org) 
+
 ---
 
 ## Overview
@@ -61,11 +65,11 @@ Default settings:
   "server_host": "localhost",
   "server_port": 3000,
   "rpc_node": "https://rpc.testnet.near.org",
-  "allow_rpc_update": false
+  "init_disabled": true
 }
 ```
 
-_**Note:** `allow_rpc_update` determines if this param can be changed via `/init` route._
+_**Note:** `init_disabled` determines if params can be changed via `/init` route._
 
 4. Start server
 

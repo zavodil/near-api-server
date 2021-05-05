@@ -26,9 +26,6 @@ module.exports = {
 
     Init: async function (master_account_id, master_key, nft_contract, server_host, server_port, rpc_node) {
         try {
-            if (rpc_node && !settings.allow_rpc_update)
-                return api.reject("RPC update restricted. Please update config if you have access");
-
             const new_settings = settings;
             if (master_account_id) new_settings.master_account_id = master_account_id;
             if (master_key) new_settings.master_key = master_key;

@@ -107,6 +107,11 @@ function App() {
         []
     );
 
+    React.useEffect(() => {
+        const timeOutId = setTimeout(() => UpdateQuery(request), 500);
+        return () => clearTimeout(timeOutId);
+    }, [request]);
+
     const SignButton = () => {
         return (signedIn ?
                 <div>{window.accountId}&nbsp;
@@ -131,7 +136,6 @@ function App() {
     const UpdateQuery = (query) => {
         query = query.toLowerCase();
         setShowCallOptions(query.startsWith("near call"));
-        setRequest(query);
     };
 
     return (
@@ -146,7 +150,7 @@ function App() {
                     <div>Query</div>
                     <input spellCheck="false" style={{width: "700px"}} type="text" name="query"
                            onKeyDown={_handleKeyDown}
-                           defaultValue={request} onChange={e => UpdateQuery(e.target.value)}
+                           defaultValue={request} onChange={e => setRequest(e.target.value)}
                     />
                     <button onClick={_sendForm} disabled={processing}>
                         {processing ? "Processing" : "Send"}

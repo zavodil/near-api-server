@@ -63,7 +63,7 @@ const init = async () => {
         path: '/',
         handler: () => {
             return api.notify(
-                'Welcome to NEAR API! ' +
+                'Welcome to NEAR REST API! ' +
                 (!settings.master_account_id
                     ? 'Please initialize your NEAR account in order to use simple nft mint/transfer methods'
                     : `Master Account: ${settings.master_account_id}`)
@@ -120,6 +120,10 @@ const init = async () => {
         method: 'POST',
         path: '/init',
         handler: async (request) => {
+            if(settings.init_disabled) {
+                return api.reject('Method now allowed');
+            }
+
             request = processRequest(request);
             let {
                 master_account_id,

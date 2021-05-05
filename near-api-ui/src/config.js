@@ -1,4 +1,4 @@
-const CONTRACT_NAME = process.env.CONTRACT_NAME || "dev-1609348608630-8665489";
+const CONTRACT_NAME = process.env.CONTRACT_NAME || "null_address.testnet";
 
 module.exports = {
     API_SERVER_URL: "https://testnet.api.nearspace.info:5000",
@@ -20,7 +20,7 @@ module.exports = {
                 return {
                     networkId: 'testnet',
                     nodeUrl: 'https://rpc.testnet.near.org',
-                    contractName: CONTRACT_NAME || "dev-1609348608630-8665489",
+                    contractName: CONTRACT_NAME || "null_address.testnet",
                     walletUrl: 'https://wallet.testnet.near.org',
                     helperUrl: 'https://helper.testnet.near.org',
                     explorerUrl: 'https://explorer.testnet.near.org',
