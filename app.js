@@ -87,7 +87,9 @@ const init = async () => {
         async (params) => await blockchain.View(
             params.contract,
             params.method,
-            params.params),
+            params.params,
+            params.rpc_node
+        ),
         getServerMethodParams());
 
     server.route({

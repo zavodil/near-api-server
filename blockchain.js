@@ -9,9 +9,9 @@ module.exports = {
     /**
      * @return {string}
      */
-    View: async function (recipient, method, params) {
+    View: async function (recipient, method, params, rpc_node) {
         try {
-            const nearRpc = new nearApi.providers.JsonRpcProvider(settings.rpc_node);
+            const nearRpc = new nearApi.providers.JsonRpcProvider(rpc_node || settings.rpc_node);
 
             const account = new nearApi.Account({provider: nearRpc});
             return await account.viewFunction(

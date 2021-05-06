@@ -17,6 +17,8 @@ function App() {
     const [showCallOptions, setShowCallOptions] = useState(false);
     const [request, setRequest] = useState("near view lunanova.pool.f863973.m0 get_accounts '{\"from_index\": 0, \"limit\": 100}'");
     const [response, setResponse] = useState({});
+    const [viewNetworkTestnet, setViewNetworkTestnet] = useState(true);
+    const [viewNetworkDisabled, setViewNetworkDisabled] = useState(false);
 
     const _handleKeyDown = function (e) {
         if (e.key === 'Enter') {
@@ -68,6 +70,12 @@ function App() {
                         attached_gas: gasAttached,
                         attached_tokens: tokensAttached,
                     }
+                } else {
+                    if (!viewNetworkTestnet)
+                        body = {
+                            ...body,
+                            rpc_node: "https://rpc.mainnet.near.org"
+                        }
                 }
 
                 const t0 = performance.now();
@@ -135,7 +143,11 @@ function App() {
 
     const UpdateQuery = (query) => {
         query = query.toLowerCase();
-        setShowCallOptions(query.startsWith("near call"));
+        const isCall = query.startsWith("near call");
+        setShowCallOptions(isCall);
+        setViewNetworkDisabled(isCall);
+        if(isCall)
+            setViewNetworkTestnet(false);
     };
 
     return (
@@ -147,14 +159,28 @@ function App() {
 
             <div style={{padding: "20px 0 10px 20px"}}>
                 <div>
-                    <div>Query</div>
-                    <input spellCheck="false" style={{width: "700px"}} type="text" name="query"
-                           onKeyDown={_handleKeyDown}
-                           defaultValue={request} onChange={e => setRequest(e.target.value)}
-                    />
-                    <button onClick={_sendForm} disabled={processing}>
-                        {processing ? "Processing" : "Send"}
-                    </button>
+                    <div style={{display: "block", width: "700px"}}>
+                        <div style={{display: "inline-block"}}>Query</div>
+                        <div style={{float: "right", display: "inline-block"}}>Network:
+
+                            <input type="checkbox" disabled={viewNetworkDisabled}
+                                   checked={viewNetworkTestnet}
+                                   onChange={(e) => {
+                                       setViewNetworkTestnet(e.target.checked)
+                                   }}/>
+                            Testnet
+                        </div>
+                    </div>
+
+                    <div>
+                        <input spellCheck="false" style={{width: "700px"}} type="text" name="query"
+                               onKeyDown={_handleKeyDown}
+                               defaultValue={request} onChange={e => setRequest(e.target.value)}
+                        />
+                        <button onClick={_sendForm} disabled={processing}>
+                            {processing ? "Processing" : "Send"}
+                        </button>
+                    </div>
                 </div>
 
                 <div className={showCallOptions ? "option-buttons" : "hidden"}>
