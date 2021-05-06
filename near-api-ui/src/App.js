@@ -134,7 +134,7 @@ function App() {
         return IsObject(response) ?
             <ReactJson style={{width: "1100px", height: "300px"}}
                        src={response}/>
-            : null;
+            : <pre>{response}</pre>;
     }
 
     const IsObject = (obj) => {
