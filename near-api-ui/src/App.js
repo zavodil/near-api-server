@@ -147,7 +147,7 @@ function App() {
         setShowCallOptions(isCall);
         setViewNetworkDisabled(isCall);
         if(isCall)
-            setViewNetworkTestnet(false);
+            setViewNetworkTestnet(true);
     };
 
     return (
