@@ -2,6 +2,7 @@ const CONTRACT_NAME = process.env.CONTRACT_NAME || "null_address.testnet";
 
 module.exports = {
     API_SERVER_URL: "https://rest.nearapi.org",
+    MAINNET_RPC: "https://rpc.mainnet.near.org",
     getConfig: (env) => {
         switch (env) {
 

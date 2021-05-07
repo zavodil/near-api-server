@@ -5,7 +5,10 @@ import './App.css';
 import * as nearAPI from 'near-api-js'
 import ReactJson from 'react-json-view'
 
-import {API_SERVER_URL} from './config'
+const codec = require('json-url')('lzw');
+const queryString = require('query-string');
+
+import {API_SERVER_URL, MAINNET_RPC} from './config'
 
 function App() {
     const [processing, setProcessing] = useState(false);
@@ -20,13 +23,15 @@ function App() {
     const [viewNetworkTestnet, setViewNetworkTestnet] = useState(true);
     const [viewNetworkDisabled, setViewNetworkDisabled] = useState(false);
 
+    let firstLoad = true;
+
     const _handleKeyDown = function (e) {
         if (e.key === 'Enter') {
             _sendForm()
         }
     }
 
-    const _sendForm = function () {
+    const _sendForm = async () => {
         try {
 
             const call = request.toLowerCase().split(/('.*?'|".*?"|\S+)/g);
@@ -74,43 +79,67 @@ function App() {
                     if (!viewNetworkTestnet)
                         body = {
                             ...body,
-                            rpc_node: "https://rpc.mainnet.near.org"
+                            rpc_node: MAINNET_RPC
                         }
+
+                    SetViewQueryUrl(body);
                 }
 
-                const t0 = performance.now();
-                setProcessing(true);
+                await GetResponseFromNear(call[3], body);
 
-                fetch(`${API_SERVER_URL}/${call[3]}`, {
-                    method: 'POST',
-                    body: JSON.stringify(body),
-                    headers: {
-                        'Content-type': 'application/json; charset=UTF-8'
-                    }
-                })
-                    .then(res => res.json())
-                    .then(res => {
-                        if (res.error)
-                            setResponse(JSON.parse(res.error));
-                        else
-                            setResponse(res);
-
-                        setErrorFlag(!!res.error);
-
-                        setProcessedTime(Math.round((performance.now() - t0) / 10) / 100);
-                        setProcessing(false)
-                    })
             }
         } catch (err) {
             setResponse({error: "Illegal query"});
+            console.log(err);
         }
     }
+
+    const GetResponseFromNear = async (method, body) => {
+        console.log("GetResponseFromNear")
+        const t0 = performance.now();
+        setProcessing(true);
+
+        return await fetch(`${API_SERVER_URL}/${method}`, {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8'
+            }
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.error)
+                    setResponse(JSON.parse(res.error));
+                else
+                    setResponse(res);
+
+                setProcessing(false)
+                setErrorFlag(!!res.error);
+                setProcessedTime(Math.round((performance.now() - t0) / 10) / 100);
+            })
+    };
 
     React.useEffect(
         async () => {
             if (window.walletConnection.isSignedIn()) {
                 setSignedIn(true)
             }
+
+            if (firstLoad && location.search) {
+                const query = JSON.parse(JSON.stringify(queryString.parse(location.search)));
+                if (query && query.hasOwnProperty("q")) {
+                    codec.decompress(query.q).then(async (json) => {
+                        console.log("Loading url query...");
+                        console.log(json);
+                        console.log(`near view ${json.contract} ${json.method} '${JSON.stringify(json.params)}'`);
+                        setRequest(`near view ${json.contract} ${json.method} '${JSON.stringify(json.params)}'`);
+                        setViewNetworkTestnet(json.rpc_node !== MAINNET_RPC);
+                        await GetResponseFromNear("view", json);
+                    });
+                }
+            }
+
+            firstLoad = false;
         },
         []
     );
@@ -119,6 +148,14 @@ function App() {
         const timeOutId = setTimeout(() => UpdateQuery(request), 500);
         return () => clearTimeout(timeOutId);
     }, [request]);
+
+    const SetViewQueryUrl = (request) => {
+        codec.compress(request).then(compressed_string => {
+            const url = location.protocol + '//' + location.host + location.pathname + '?q=' + compressed_string;
+            window.history.replaceState({}, document.title, url);
+            console.log(url)
+        });
+    }
 
     const SignButton = () => {
         return (signedIn ?
@@ -131,11 +168,13 @@ function App() {
     }
 
     const JsonOutput = () => {
-        return IsObject(response) ?
-            <ReactJson style={{width: "1100px", height: "300px"}}
-                       src={response}/>
+        if(!response || (IsObject(response) && !Object.keys(response).length))
+            return  null;
+
+        return IsObject(response)
+            ? <ReactJson src={response}/>
             : <pre>{response}</pre>;
-    }
+    };
 
     const IsObject = (obj) => {
         return obj !== undefined && obj !== null && typeof obj == 'object';
@@ -146,7 +185,7 @@ function App() {
         const isCall = query.startsWith("near call");
         setShowCallOptions(isCall);
         setViewNetworkDisabled(isCall);
-        if(isCall)
+        if (isCall)
             setViewNetworkTestnet(true);
     };
 
@@ -159,7 +198,10 @@ function App() {
 
             <div style={{padding: "20px 0 10px 20px"}}>
                 <div>
-                    <div style={{display: "block", width: "700px"}}>
+                    <div>
+                        <h1><a href="//web.nearapi.org">NEAR REST API Web</a></h1>
+                    </div>
+                    <div className="query-options">
                         <div style={{display: "inline-block"}}>Query</div>
                         <div style={{float: "right", display: "inline-block"}}>Network:
 
@@ -173,11 +215,11 @@ function App() {
                     </div>
 
                     <div>
-                        <input spellCheck="false" style={{width: "700px"}} type="text" name="query"
-                               onKeyDown={_handleKeyDown}
-                               defaultValue={request} onChange={e => setRequest(e.target.value)}
+                        <input spellCheck="false" type="text" name="query"
+                               className="input-query" onKeyDown={_handleKeyDown}
+                               value={request} onChange={e => setRequest(e.target.value)}
                         />
-                        <button onClick={_sendForm} disabled={processing}>
+                        <button onClick={_sendForm} disabled={processing} className="button-query">
                             {processing ? "Processing" : "Send"}
                         </button>
                     </div>
@@ -197,7 +239,7 @@ function App() {
             </div>
 
 
-            <div style={{paddingLeft: "20px"}}>
+            <div className="json-response">
                 {errorFlag
                     ? <div className="error">ERROR!</div>
                     : (processedTime
@@ -205,6 +247,10 @@ function App() {
                         : null)
                 }
                 <JsonOutput/>
+            </div>
+            <div className="github-hint">
+                <span>Interact with the NEAR blockchain using a simple REST API. </span>
+                <a href="https://github.com/near-examples/near-rest-api-server">Github</a>
             </div>
 
 
