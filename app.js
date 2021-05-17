@@ -77,8 +77,16 @@ const init = async () => {
         handler: async (request, h) => {
             request = processRequest(request);
 
-            request.payload.request_name = "view";
-            return replyCachedValue(h, await server.methods.view(request.payload));
+            if (request.payload.disabled_cache) {
+                return await blockchain.View(
+                    request.payload.contract,
+                    request.payload.method,
+                    request.payload.params
+                );
+            } else {
+                request.payload.request_name = "view";
+                return replyCachedValue(h, await server.methods.view(request.payload));
+            }
         }
     });
 
@@ -122,7 +130,7 @@ const init = async () => {
         method: 'POST',
         path: '/init',
         handler: async (request) => {
-            if(settings.init_disabled) {
+            if (settings.init_disabled) {
                 return api.reject('Method now allowed');
             }
 
