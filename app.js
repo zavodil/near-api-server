@@ -338,6 +338,15 @@ const init = async () => {
         },
     });
 
+    server.route({
+        method: 'GET',
+        path: '/about',
+        handler: async () => {
+            var pjson = require('./package.json');
+            return "NEAR REST API SERVER Ver. " + pjson.version;
+        }
+    });
+
     await server.start();
     console.log('Server running on %s', server.info.uri);
 };
