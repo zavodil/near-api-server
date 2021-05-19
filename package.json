@@ -1,6 +1,6 @@
 {
   "name": "near-api-server",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "main": "app.js",
   "scripts": {
@@ -9,11 +9,12 @@
   "author": "Vadim Ilin",
   "license": "ISC",
   "dependencies": {
+    "@hapi/catbox-memory": "^5.0.1",
     "@hapi/hapi": "^18.1.0",
     "body-parser": "~1.19.0",
+    "faker": "~5.4.0",
     "near-api-js": "~0.38.0",
     "near-seed-phrase": "^0.1.0",
-    "faker": "~5.4.0",
     "node-fetch": "^2.6.1"
   },
   "bin": {

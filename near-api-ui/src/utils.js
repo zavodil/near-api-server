@@ -35,5 +35,5 @@ export function login() {
     // user's behalf.
     // This works by creating a new access key for the user's account and storing
     // the private key in localStorage.
-    window.walletConnection.requestSignIn("", "NEAR API")
+    window.walletConnection.requestSignIn("", "NEAR REST API")
 }

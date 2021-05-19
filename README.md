@@ -2,6 +2,10 @@
 
 > Interact with the NEAR blockchain using a simple REST API.
 
+###### Live Demo:
+* [REST API Endpoint for NEAR Testnet](https://rest.nearapi.org) 
+* [Web Console for `view`/`call` requests](https://web.nearapi.org) 
+
 ---
 
 ## Overview
@@ -20,6 +24,7 @@ _Click on a route for more information and examples_
 | [`/create_user`](#create_user)             | POST   | Creates a NEAR [sub-account](https://docs.near.org/docs/concepts/account#subaccounts) and stores credentials in `/storage`. |
 | [`/parse_seed_phrase`](#parse_seed_phrase) | POST   | Displays public and private key pair from a given seed phrase.                                                              |
 | [`/balance`](#balance)                     | GET    | Displays account balance.                                                                                                   |
+| [`/keypair`](#keypair)                     | GET    | Generates Ed25519 key pair.                                                                                                 |
 |                                            |        |                                                                                                                             |
 | **NFT EXAMPLE**                            |        |                                                                                                                             |
 | [`/mint_nft`](#mint_nft)                   | POST   | Mints an NFT for a given contract.                                                                                          |
@@ -60,11 +65,11 @@ Default settings:
   "server_host": "localhost",
   "server_port": 3000,
   "rpc_node": "https://rpc.testnet.near.org",
-  "allow_rpc_update": false
+  "init_disabled": true
 }
 ```
 
-_**Note:** `allow_rpc_update` determines if this param can be changed via `/init` route._
+_**Note:** `init_disabled` determines if params can be changed via `/init` route._
 
 4. Start server
 
@@ -100,7 +105,9 @@ Example:
 }
 ```
 
-Example Response:
+<details>
+<summary><strong>Example Response:</strong> </summary>
+<p>
 
 ```json
 {
@@ -175,6 +182,9 @@ Example Response:
 }
 ```
 
+</p>
+</details>
+
 ---
 
 ## `/view`
@@ -199,7 +209,9 @@ Example:
 }
 ```
 
-Example Response:
+<details>
+<summary><strong>Example Response:</strong> </summary>
+<p>
 
 ```json
 [
@@ -236,6 +248,9 @@ Example Response:
 ]
 ```
 
+</p>
+</details>
+
 ---
 
 ## `/call`
@@ -270,7 +285,10 @@ Example:
 }
 ```
 
-Example Response:
+
+<details>
+<summary><strong>Example Response:</strong> </summary>
+<p>
 
 ```json
 {
@@ -367,6 +385,9 @@ Example Response:
   ]
 }
 ```
+
+</p>
+</details>
 
 ---
 
@@ -488,6 +509,29 @@ Example Response:
 
 ---
 
+## `/keypair`
+
+> _Generates Ed25519 key pair._
+
+**Method:** **`GET`**
+
+Example:
+
+```
+http://localhost:3000/keypair
+```
+
+Example Response:
+
+```
+{
+  "public_key": "ed25519:3pNJK3fwP14UEbPjQqgDASwWR4XmbAEQBeNsyThhtNKY",
+  "private_key": "3s9nVrCU4MER3w9cxXcJM58RGRzFNJnLzo9vgQiNrkuGW3Xp7Up6cYnY4JKQZ7Qp3GhmXckrApRyDPAfzo2oCm8a"
+}
+```
+
+---
+
 # NFTs
 
 ---
@@ -535,7 +579,9 @@ Example:
 }
 ```
 
-Example Response:
+<details>
+<summary><strong>Example Response:</strong> </summary>
+<p>
 
 ```json
 [
@@ -551,7 +597,12 @@ Example Response:
 ]
 ```
 
+</p>
+</details>
+
 _(`tx` is the transaction hash that can be queried in [NEAR Explorer](http://explorer.testnet.near.org))_
+
+---
 
 ### Batch NFT minting (simple)
 
@@ -570,7 +621,9 @@ Example:
 
 _(This creates `EXAMPLE_TOKEN_31`, `EXAMPLE_TOKEN_32`, & `EXAMPLE_TOKEN_33`)_
 
-Example Response:
+<details>
+<summary><strong>Example Response:</strong> </summary>
+<p>
 
 ```json
 [
@@ -585,6 +638,9 @@ Example Response:
   }
 ]
 ```
+
+</p>
+</details>
 
 _(Above response are transaction hashes that can be queried in [NEAR Explorer](http://explorer.testnet.near.org))_
 
