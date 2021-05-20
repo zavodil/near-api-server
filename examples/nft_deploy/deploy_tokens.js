@@ -10,6 +10,22 @@ const ACCOUNT_ID = "zavodil.testnet";
 const CREDENTIALS_DIR = ".near-credentials/testnet/";
 
 const run = async () => {
+    const tokens = data.map(({token_type, metadata}, i) => {
+        return {
+            token_type,
+            token_id: token_type + '_1',
+            metadata: {
+                ...metadata,
+                issued_at: Date.now().toString(),
+            },
+            perpetual_royalties: {
+                ['escrow-' + (i + 1) + '.nft.near']: 1000, //10%
+                "account-2.near": 500, // 5%
+                "account-3.near": 100 // 1%
+            }
+        }
+    });
+    
     // initial add_token_types: 100 tokens of each type
     const supply_cap_by_type = tokens.map(({token_type}) => ({
         [token_type]: '100'
@@ -117,21 +133,5 @@ const getPrivateKey = async (accountId) => {
         throw new Error("Key not found for account " + keyPath + ". Error: " + e.message);
     }
 };
-
-const tokens = data.map(({token_type, metadata}, i) => {
-    return {
-        token_type,
-        token_id: token_type + '_1',
-        metadata: {
-            ...metadata,
-            issued_at: Date.now().toString(),
-        },
-        perpetual_royalties: {
-            ['escrow-' + (i + 1) + '.nft.near']: 1000, //10%
-            "account-2.near": 500, // 5%
-            "account-3.near": 100 // 1%
-        }
-    }
-});
 
 run().then(r => console.log(r));
