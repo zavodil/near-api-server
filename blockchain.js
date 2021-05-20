@@ -116,10 +116,10 @@ module.exports = {
         try {
             const keyPair = nearApi.utils.KeyPair.fromString(settings.master_key);
             const keyStore = new nearApi.keyStores.InMemoryKeyStore();
-            keyStore.setKey("default", settings.master_account_id, keyPair);
+            keyStore.setKey("testnet", settings.master_account_id, keyPair);
 
             const near = await nearApi.connect({
-                networkId: "default",
+                networkId: "testnet",
                 deps: {keyStore},
                 masterAccount: settings.master_account_id,
                 nodeUrl: settings.rpc_node
@@ -140,10 +140,10 @@ module.exports = {
 
             const keyPair = nearApi.utils.KeyPair.fromString(account.private_key);
             const keyStore = new nearApi.keyStores.InMemoryKeyStore();
-            keyStore.setKey("default", account.account_id, keyPair);
+            keyStore.setKey("testnet", account.account_id, keyPair);
 
             const near = await nearApi.connect({
-                networkId: "default",
+                networkId: "testnet",
                 deps: {keyStore},
                 masterAccount: account.account_id,
                 nodeUrl: settings.rpc_node
@@ -161,10 +161,10 @@ module.exports = {
 
             const keyPair = nearApi.utils.KeyPair.fromString(private_key);
             const keyStore = new nearApi.keyStores.InMemoryKeyStore();
-            keyStore.setKey("default", account_id, keyPair);
+            keyStore.setKey("testnet", account_id, keyPair);
 
             const near = await nearApi.connect({
-                networkId: "default",
+                networkId: "testnet",
                 deps: {keyStore},
                 masterAccount: account_id,
                 nodeUrl: settings.rpc_node
