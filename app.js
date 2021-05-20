@@ -282,7 +282,7 @@ const init = async () => {
 
                 if (tx) {
                     if (min === max) {
-                        let create_token = await token.ViewNFT(tokenId, account_id);
+                        let create_token = await token.ViewNFT(tokenId, contract);
                         create_token.token_id = tokenId;
                         response.push({token: create_token, tx: tx});
                     } else {
