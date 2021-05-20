@@ -15,7 +15,9 @@
     "faker": "~5.4.0",
     "near-api-js": "~0.38.0",
     "near-seed-phrase": "^0.1.0",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "fs": "*",
+    "path": "^0.12.7"
   },
   "bin": {
     "near-api-server": "./app.js"
