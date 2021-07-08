@@ -13,11 +13,12 @@
     "@hapi/hapi": "^18.1.0",
     "body-parser": "~1.19.0",
     "faker": "~5.4.0",
+    "fs": "*",
     "near-api-js": "~0.38.0",
     "near-seed-phrase": "^0.1.0",
     "node-fetch": "^2.6.1",
-    "fs": "*",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "pg": "^8.6.0"
   },
   "bin": {
     "near-api-server": "./app.js"

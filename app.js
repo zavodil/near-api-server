@@ -10,6 +10,7 @@ const crypto = require('crypto');
 const CatboxMemory = require('@hapi/catbox-memory');
 const Hapi = require('@hapi/hapi');
 const fs = require('fs');
+const {Client} = require('pg');
 
 const settings = JSON.parse(fs.readFileSync(api.CONFIG_PATH, 'utf8'));
 const ViewCacheExpirationInSeconds = 10;
@@ -345,6 +346,36 @@ const init = async () => {
             var pjson = require('./package.json');
             return "NEAR REST API SERVER Ver. " + pjson.version;
         }
+    });
+
+    server.route({
+        method: 'POST',
+        path: '/explorer',
+        handler: async (request, h) => {
+
+            let {
+                user,
+                host,
+                database,
+                password,
+                port,
+                query,
+                parameters
+            } = request.payload;
+
+            const client = new Client({
+                user,
+                host,
+                database,
+                password,
+                port,
+            });
+
+            client.connect();
+
+            let response = await client.query(query, parameters);
+            return response.rows;
+        },
     });
 
     await server.start();
