@@ -544,7 +544,7 @@ Example Response:
 | `database`                       | _Name of the database, `testnet_explorer`_             |
 | `password`                       | _Password, `nearprotocol`_                             |
 | `port`                           | _Port, `5432`_                                         |
-| `params`                         | _Array of query params, `[]`_                          |
+| `parameters`                     | _Array of query parameters, `[]`_                      |
 | `query`                          | _Query without tabs, linebreaks and special characters_|
 
 
@@ -557,8 +557,8 @@ Example:
   "database": "testnet_explorer",
   "password": "nearprotocol",
   "port": 5432,
-  "params": [],
-  "query": "SELECT * FROM action_receipt_actions WHERE receipt_receiver_account_id = 'testnet' LIMIT 1"}
+  "parameters": ["testnet", 1],
+  "query": "SELECT * FROM action_receipt_actions WHERE receipt_receiver_account_id = $1 LIMIT $2"}
 }
 ```
 
