@@ -25,6 +25,7 @@ _Click on a route for more information and examples_
 | [`/parse_seed_phrase`](#parse_seed_phrase) | POST   | Displays public and private key pair from a given seed phrase.                                                              |
 | [`/balance`](#balance)                     | GET    | Displays account balance.                                                                                                   |
 | [`/keypair`](#keypair)                     | GET    | Generates Ed25519 key pair.                                                                                                 |
+| [`/explorer`](#explorer)                   | POST   | Run SELECT query in NEAR explorer database.                                                                                 |
 |                                            |        |                                                                                                                             |
 | **NFT EXAMPLE**                            |        |                                                                                                                             |
 | [`/mint_nft`](#mint_nft)                   | POST   | Mints an NFT for a given contract.                                                                                          |
@@ -529,6 +530,60 @@ Example Response:
   "private_key": "3s9nVrCU4MER3w9cxXcJM58RGRzFNJnLzo9vgQiNrkuGW3Xp7Up6cYnY4JKQZ7Qp3GhmXckrApRyDPAfzo2oCm8a"
 }
 ```
+
+## `/explorer`
+
+> _Run SELECT query in NEAR explorer database._
+
+**Method:** **`POST`**
+
+| Param                            | Description                                            |
+| -------------------------------- | ------------------------------------------------------ |
+| `user`                           | _Public account, `public_readonly`_                    |
+| `host`                           | _NEAR indexer host, `35.184.214.98`_                   |
+| `database`                       | _Name of the database, `testnet_explorer`_             |
+| `password`                       | _Password, `nearprotocol`_                             |
+| `port`                           | _Port, `5432`_                                         |
+| `params`                         | _Array of query params, `[]`_                          |
+| `query`                          | _Query without tabs, linebreaks and special characters_|
+
+
+Example:
+
+```json
+{
+  "user": "public_readonly",
+  "host": "35.184.214.98",
+  "database": "testnet_explorer",
+  "password": "nearprotocol",
+  "port": 5432,
+  "params": [],
+  "query": "SELECT * FROM action_receipt_actions WHERE receipt_receiver_account_id = 'testnet' LIMIT 1"}
+}
+```
+
+<details>
+<summary><strong>Example Response:</strong> </summary>
+<p>
+
+```json
+[
+  {
+    "receipt_id": "GZMyzjDWPJLjrCuQG82uHj3xRVHwdDnWHH1gCnSBejkR",
+    "index_in_action_receipt": 0,
+    "action_kind": "TRANSFER",
+    "args": {
+      "deposit": "1273665187500000000"
+    },
+    "receipt_predecessor_account_id": "system",
+    "receipt_receiver_account_id": "testnet",
+    "receipt_included_in_block_timestamp": "1619207391172257749"
+  }
+]
+```
+
+</p>
+</details>
 
 ---
 
