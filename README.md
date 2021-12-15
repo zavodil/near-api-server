@@ -440,7 +440,7 @@ Example Response:
 
 ## `/sign_url`
 
-> _Generates a link to NEAR Wallet with provided transaction details. May be used to redirect user to the wallet and perform a transaction without generation application-specific keys and granting access.
+> _Generates a link to NEAR Wallet with provided transaction details. May be used to redirect user to the wallet and perform a transaction without generation application-specific keys and granting access._
 
 **Method:** **`POST`**
 
@@ -580,16 +580,17 @@ Example Response:
 
 **Method:** **`POST`**
 
-| Param                            | Description                                            |
-| -------------------------------- | ------------------------------------------------------ |
-| `user`                           | _Public account, `public_readonly`_                    |
-| `host`                           | _NEAR indexer host, `35.184.214.98`_                   |
-| `database`                       | _Name of the database, `testnet_explorer`_             |
-| `password`                       | _Password, `nearprotocol`_                             |
-| `port`                           | _Port, `5432`_                                         |
-| `parameters`                     | _Array of query parameters, `[]`_                      |
-| `query`                          | _Query without tabs, linebreaks and special characters_|
+| Param                            | Description                                                 |
+| -------------------------------- | ----------------------------------------------------------- |
+| `user`                           | _Public account, `public_readonly`_                         |
+| `host`                           | _NEAR indexer host, `testnet.db.explorer.indexer.near.dev`_ |
+| `database`                       | _Name of the database, `testnet_explorer`_                  |
+| `password`                       | _Password, `nearprotocol`_                                  |
+| `port`                           | _Port, `5432`_                                              |
+| `parameters`                     | _Array of query parameters, `[]`_                           |
+| `query`                          | _Query without tabs, linebreaks and special characters_     |     
 
+Check indexer server credentials on a [github](https://github.com/near/near-indexer-for-explorer/#shared-public-access). 
 
 Example:
 
@@ -601,7 +602,7 @@ Example:
   "password": "nearprotocol",
   "port": 5432,
   "parameters": ["testnet", 1],
-  "query": "SELECT * FROM action_receipt_actions WHERE receipt_receiver_account_id = $1 LIMIT $2"}
+  "query": "SELECT * FROM action_receipt_actions WHERE receipt_receiver_account_id = $1 LIMIT $2"
 }
 ```
 

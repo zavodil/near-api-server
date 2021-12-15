@@ -11,6 +11,7 @@ const CatboxMemory = require('@hapi/catbox-memory');
 const Hapi = require('@hapi/hapi');
 const fs = require('fs');
 const {Client} = require('pg');
+Client.poolSize = 100;
 
 const settings = JSON.parse(fs.readFileSync(api.CONFIG_PATH, 'utf8'));
 const ViewCacheExpirationInSeconds = 10;
@@ -370,10 +371,17 @@ const init = async () => {
                 port,
             });
 
-            client.connect();
+            if (["104.199.89.51", "35.184.214.98"].includes(host)) {
+                return api.reject('Please run explorer function only on your own NEAR REST API SERVER instance, https://github.com/near-examples/near-api-rest-server');
+            }
 
-            let response = await client.query(query, parameters);
-            return response.rows;
+            try {
+                client.connect();
+                let response = await client.query(query, parameters);
+                return response.rows;
+            } catch (ex) {
+                return api.reject('Error. ' + ex.message);
+            }
         },
     });
 
