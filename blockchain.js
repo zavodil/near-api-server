@@ -2,6 +2,7 @@ const nearApi = require('near-api-js');
 const api = require('./api');
 const fs = require('fs');
 const fetch = require('node-fetch');
+const {getNetworkFromRpcNode} = require("./api");
 
 const settings = JSON.parse(fs.readFileSync(api.CONFIG_PATH, 'utf8'));
 
@@ -9,11 +10,36 @@ module.exports = {
     /**
      * @return {string}
      */
+    GetSignUrl: async function (account_id, method, params, deposit, gas, receiver_id, meta, callback_url, network) {
+        try {
+            if(!network)
+                network = "mainnet";
+            const deposit_value = typeof deposit == 'string' ? deposit : nearApi.utils.format.parseNearAmount('' + deposit);
+            const actions = [method === '!transfer' ? nearApi.transactions.transfer(deposit_value) : nearApi.transactions.functionCall(method, Buffer.from(JSON.stringify(params)), gas, deposit_value)];
+            const keypair = nearApi.utils.KeyPair.fromRandom('ed25519');
+            const provider = new nearApi.providers.JsonRpcProvider({url: 'https://rpc.' + network + '.near.org'});
+            const block = await provider.block({finality: 'final'});
+            const txs = [nearApi.transactions.createTransaction(account_id, keypair.publicKey, receiver_id, 1, actions, nearApi.utils.serialize.base_decode(block.header.hash))];
+            const newUrl = new URL('sign', 'https://wallet.' + network + '.near.org/');
+            newUrl.searchParams.set('transactions', txs.map(transaction => nearApi.utils.serialize.serialize(nearApi.transactions.SCHEMA, transaction)).map(serialized => Buffer.from(serialized).toString('base64')).join(','));
+            newUrl.searchParams.set('callbackUrl', callback_url);
+            if (meta)
+                newUrl.searchParams.set('meta', meta);
+            return newUrl.href;
+        } catch (e) {
+            return api.reject(e);
+        }
+    },
+
+    /**
+     * @return {string}
+     */
     View: async function (recipient, method, params, rpc_node) {
         try {
-            const nearRpc = new nearApi.providers.JsonRpcProvider(rpc_node || settings.rpc_node);
+            let rpc = rpc_node || settings.rpc_node;
+            const nearRpc = new nearApi.providers.JsonRpcProvider({url: rpc});
 
-            const account = new nearApi.Account({provider: nearRpc});
+            const account = new nearApi.Account({provider: nearRpc, networkId: getNetworkFromRpcNode(rpc), signer: recipient}, recipient);
             return await account.viewFunction(
                 recipient,
                 method,

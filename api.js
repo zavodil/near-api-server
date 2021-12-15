@@ -9,5 +9,8 @@ module.exports = {
     },
     notify: (message) => {
         return {text: message};
+    },
+    getNetworkFromRpcNode(rpc_node){
+        return rpc_node.replace("https://rpc.", "").replace(".near.org", "");
     }
 }

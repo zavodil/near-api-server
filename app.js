@@ -79,7 +79,7 @@ const init = async () => {
             request = processRequest(request);
 
             if (request.payload.disabled_cache) {
-                return await blockchain.View(
+                return blockchain.View(
                     request.payload.contract,
                     request.payload.method,
                     request.payload.params
@@ -93,7 +93,7 @@ const init = async () => {
 
     server.method(
         'view',
-        async (params) => await blockchain.View(
+        async (params) => blockchain.View(
             params.contract,
             params.method,
             params.params,
@@ -301,7 +301,7 @@ const init = async () => {
     server.route({
         method: 'POST',
         path: '/transfer_nft',
-        handler: async (request, h) => {
+        handler: async (request) => {
             request = processRequest(request);
 
             let {
@@ -343,16 +343,15 @@ const init = async () => {
         method: 'GET',
         path: '/about',
         handler: async () => {
-            var pjson = require('./package.json');
-            return "NEAR REST API SERVER Ver. " + pjson.version;
+            const json = require('./package.json');
+            return "NEAR REST API SERVER Ver. " + json.version;
         }
     });
 
     server.route({
         method: 'POST',
         path: '/explorer',
-        handler: async (request, h) => {
-
+        handler: async (request) => {
             let {
                 user,
                 host,
@@ -375,6 +374,36 @@ const init = async () => {
 
             let response = await client.query(query, parameters);
             return response.rows;
+        },
+    });
+
+    server.route({
+        method: 'POST',
+        path: '/sign_url',
+        handler: async (request) => {
+            let {
+                account_id,
+                method,
+                params,
+                deposit,
+                gas,
+                receiver_id,
+                meta,
+                callback_url,
+                network
+            } = request.payload;
+
+            return blockchain.GetSignUrl(
+                account_id,
+                method,
+                params,
+                deposit,
+                gas,
+                receiver_id,
+                meta,
+                callback_url,
+                network
+            );
         },
     });
 

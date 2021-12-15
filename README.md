@@ -438,6 +438,49 @@ Example Response:
 
 ---
 
+## `/sign_url`
+
+> _Generates a link to NEAR Wallet with provided transaction details. May be used to redirect user to the wallet and perform a transaction without generation application-specific keys and granting access.
+
+**Method:** **`POST`**
+
+| Param                            | Description                                                                                                             |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `account_id`                     | _Signer Account_                                                                                                        |
+| `receiver_id`                    | _Recipient contract account, may be dApp contract or personal account_                                                  |
+| `method`                         | _Contract method to call. Use `!transfer` to transfer NEAR tokens_                                                      |
+| `params`                         | _Transaction arguments_                                                                                                 |
+| `deposit`                        | _Attached deposit in NEAR_                                                                                              |
+| `gas`                            | _Attached gas in yoctoNEAR_                                                                                             |
+| `meta`                           | _Transaction meta. May be empty_                                                                                        |
+| `callback_url`                   | _URL to redirect user after the transaction. May be empty_                                                              |
+| `network`                        | _Your network: mainnet/testnet_                                                                                         |
+
+Example:
+
+```
+{
+	"account_id": "zavodil.testnet",
+	"receiver_id": "inotel.pool.f863973.m0",
+	"method": "ping",
+	"params": {},
+	"deposit": 0,
+	"gas": 30000000000000,	
+	"meta": "",
+	"callback_url": "",
+	"network": "testnet"
+}
+```
+
+Example Response:
+
+```
+    https://wallet.testnet.near.org/sign?transactions=DwAAAHphdm9kaWwudGVzdG5ldADKei8CC%2BlhIM9GNPitr87eHXpqdnQsCdLD%2B0ADdTJbqwEAAAAAAAAAFgAAAGlub3RlbC5wb29sLmY4NjM5NzMubTCfZPsioMcZCQRg4Uy7rOu4ERg10QV9c415FuXE0VDRRAEAAAACBAAAAHBpbmcCAAAAe30A4FfrSBsAAAAAAAAAAAAAAAAAAAAAAAA%3D&callbackUrl=
+```
+
+Approving this url performed a transaction [143c9MNaqXFXuiobjUaQ8FPSBR2ukYbCMzGdPe6HqXEq](https://explorer.testnet.near.org/transactions/143c9MNaqXFXuiobjUaQ8FPSBR2ukYbCMzGdPe6HqXEq)
+
+
 ## `/create_user`
 
 > _Creates a NEAR [sub-account](https://docs.near.org/docs/concepts/account#subaccounts) using initialized master account and saves credentials to `/storage` directory. Requires [`/init`](#init) configuration with master account._
