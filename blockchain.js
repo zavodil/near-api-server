@@ -123,16 +123,17 @@ module.exports = {
         }
     },
 
-    Call: async function (account_id, private_key, attached_tokens, attached_gas, recipient, method, params) {
+    Call: async function (account_id, private_key, attached_tokens, attached_gas, recipient, method, params, network, rpc_node) {
         try {
-            const account = await this.GetAccountByKey(account_id, private_key);
+            const account = await this.GetAccountByKey(account_id, private_key, network, rpc_node);
 
-            return await account.functionCall(
-                recipient,
-                method,
-                params,
-                attached_gas,
-                attached_tokens);
+            return await account.functionCall({
+                contractId: recipient,
+                methodName: method,
+                args: params,
+                gas: attached_gas,
+                attachedDeposit: attached_tokens
+            });
         } catch (e) {
             return api.reject(e);
         }
@@ -181,19 +182,22 @@ module.exports = {
         }
     },
 
-    GetAccountByKey: async function (account_id, private_key) {
+    GetAccountByKey: async function (account_id, private_key, network, rpc_node) {
         try {
+            network = network || "testnet";
+            rpc_node = rpc_node || settings.rpc_node;
+
             private_key = private_key.replace('"', '');
 
             const keyPair = nearApi.utils.KeyPair.fromString(private_key);
             const keyStore = new nearApi.keyStores.InMemoryKeyStore();
-            keyStore.setKey("testnet", account_id, keyPair);
+            keyStore.setKey(network, account_id, keyPair);
 
             const near = await nearApi.connect({
-                networkId: "testnet",
+                networkId: network,
                 deps: {keyStore},
                 masterAccount: account_id,
-                nodeUrl: settings.rpc_node
+                nodeUrl: rpc_node
             });
 
             return await near.account(account_id);

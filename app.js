@@ -65,7 +65,7 @@ const init = async () => {
         path: '/',
         handler: () => {
             return api.notify(
-                'Welcome to NEAR REST API! ' +
+                'Welcome to NEAR REST API SERVER (https://github.com/near-examples/near-api-rest-server)! ' +
                 (!settings.master_account_id
                     ? 'Please initialize your NEAR account in order to use simple nft mint/transfer methods'
                     : `Master Account: ${settings.master_account_id}`)
@@ -115,6 +115,8 @@ const init = async () => {
                 contract,
                 method,
                 params,
+                network,
+                rpc_node,
             } = request.payload;
             return await blockchain.Call(
                 account_id,
@@ -123,7 +125,9 @@ const init = async () => {
                 attached_gas,
                 contract,
                 method,
-                params
+                params,
+                network,
+                rpc_node,
             );
         },
     });
