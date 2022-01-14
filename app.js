@@ -101,7 +101,7 @@ const init = async () => {
             params.method,
             params.params,
             params.rpc_node,
-            request.payload.headers
+            params.headers
         ),
         getServerMethodParams());
 
