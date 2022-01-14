@@ -83,7 +83,9 @@ const init = async () => {
                 return blockchain.View(
                     request.payload.contract,
                     request.payload.method,
-                    request.payload.params
+                    request.payload.params,
+                    request.payload.rpc_node,
+                    request.payload.headers
                 );
             } else {
                 request.payload.request_name = "view";
@@ -98,7 +100,8 @@ const init = async () => {
             params.contract,
             params.method,
             params.params,
-            params.rpc_node
+            params.rpc_node,
+            request.payload.headers
         ),
         getServerMethodParams());
 
@@ -117,6 +120,7 @@ const init = async () => {
                 params,
                 network,
                 rpc_node,
+                headers
             } = request.payload;
             return await blockchain.Call(
                 account_id,
@@ -128,6 +132,7 @@ const init = async () => {
                 params,
                 network,
                 rpc_node,
+                headers
             );
         },
     });

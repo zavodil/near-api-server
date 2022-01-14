@@ -34,12 +34,18 @@ module.exports = {
     /**
      * @return {string}
      */
-    View: async function (recipient, method, params, rpc_node) {
+    View: async function (recipient, method, params, rpc_node, headers) {
         try {
             let rpc = rpc_node || settings.rpc_node;
             const nearRpc = new nearApi.providers.JsonRpcProvider({url: rpc});
 
-            const account = new nearApi.Account({provider: nearRpc, networkId: getNetworkFromRpcNode(rpc), signer: recipient}, recipient);
+            const account = new nearApi.Account({
+                    provider: nearRpc,
+                    networkId: getNetworkFromRpcNode(rpc),
+                    signer: recipient,
+                    headers: (typeof headers !== undefined) ? headers : {}
+                },
+                recipient);
             return await account.viewFunction(
                 recipient,
                 method,
@@ -123,9 +129,9 @@ module.exports = {
         }
     },
 
-    Call: async function (account_id, private_key, attached_tokens, attached_gas, recipient, method, params, network, rpc_node) {
+    Call: async function (account_id, private_key, attached_tokens, attached_gas, recipient, method, params, network, rpc_node, headers) {
         try {
-            const account = await this.GetAccountByKey(account_id, private_key, network, rpc_node);
+            const account = await this.GetAccountByKey(account_id, private_key, network, rpc_node, headers);
 
             return await account.functionCall({
                 contractId: recipient,
@@ -182,7 +188,7 @@ module.exports = {
         }
     },
 
-    GetAccountByKey: async function (account_id, private_key, network, rpc_node) {
+    GetAccountByKey: async function (account_id, private_key, network, rpc_node, headers) {
         try {
             network = network || "testnet";
             rpc_node = rpc_node || settings.rpc_node;
@@ -197,7 +203,8 @@ module.exports = {
                 networkId: network,
                 deps: {keyStore},
                 masterAccount: account_id,
-                nodeUrl: rpc_node
+                nodeUrl: rpc_node,
+                headers: (typeof headers !== undefined) ? headers : {}
             });
 
             return await near.account(account_id);
