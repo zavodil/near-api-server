@@ -36,7 +36,7 @@ _Click on a route for more information and examples_
 
 ## Requirements
 
-- [NEAR Account](https://docs.near.org/docs/develop/basics/create-account) _(with access to private key or seed phrase)_
+- [NEAR Account](https://docs.near.org/concepts/basics/account) _(with access to private key or seed phrase)_
 - [Node.js](https://nodejs.org/en/download/package-manager/)
 - [npm](https://www.npmjs.com/get-npm) or [Yarn](https://yarnpkg.com/getting-started/install)
 - API request tool such as [Postman](https://www.postman.com/downloads/)
@@ -94,7 +94,7 @@ node app
 | `seed_phrase` _OR_ `private_key` | _Seed phrase OR private key of the account id above._                                |
 | `contract`                       | _wasm file of compiled contract located in the `/contracts` folder of this project._ |
 
-_**Note:** Use [`near login`](https://docs.near.org/docs/tools/near-cli#near-login) to save your key pair to your local machine._
+_**Note:** Use [`near login`](https://docs.near.org/tools/near-cli#near-login) to save your key pair to your local machine._
 
 Example:
 
