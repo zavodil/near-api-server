@@ -199,7 +199,7 @@ function App() {
             <div style={{padding: "20px 0 10px 20px"}}>
                 <div>
                     <div>
-                        <h1><a href="//web.nearapi.org">NEAR REST API Web</a></h1>
+                        <h1><a href="//api.nearspace.info">NEAR REST API Web</a></h1>
                     </div>
                     <div className="query-options">
                         <div style={{display: "inline-block"}}>Query</div>

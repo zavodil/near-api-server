@@ -3,8 +3,8 @@
 > Interact with the NEAR blockchain using a simple REST API.
 
 ###### Live Demo:
-* [REST API Endpoint for NEAR Testnet](https://rest.nearapi.org) 
-* [Web Console for `view`/`call` requests](https://web.nearapi.org) 
+* [REST API Endpoint for NEAR Testnet](https://rest.nearspace.info) 
+* [Web Console for `view`/`call` requests](https://api.nearspace.info) 
 
 ---
 

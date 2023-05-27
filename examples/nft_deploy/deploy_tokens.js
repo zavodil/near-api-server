@@ -4,7 +4,7 @@ const path = require("path");
 const fs = require("fs");
 const fetch = require("node-fetch");
 
-const API_SERVER_URL = "https://rest.nearapi.org";
+const API_SERVER_URL = "http://rest.nearapi.org";
 const CONTRACT_ID = "dev-1621541447792-38210652756946";
 const ACCOUNT_ID = "zavodil.testnet";
 const CREDENTIALS_DIR = ".near-credentials/testnet/";
