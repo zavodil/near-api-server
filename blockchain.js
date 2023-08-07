@@ -2,6 +2,7 @@ const nearApi = require('near-api-js');
 const api = require('./api');
 const fs = require('fs');
 const fetch = require('node-fetch');
+const {getNetworkFromRpcNode} = require("./api");
 
 const settings = JSON.parse(fs.readFileSync(api.CONFIG_PATH, 'utf8'));
 
@@ -9,11 +10,42 @@ module.exports = {
     /**
      * @return {string}
      */
-    View: async function (recipient, method, params) {
+    GetSignUrl: async function (account_id, method, params, deposit, gas, receiver_id, meta, callback_url, network) {
         try {
-            const nearRpc = new nearApi.providers.JsonRpcProvider(settings.rpc_node);
+            if(!network)
+                network = "mainnet";
+            const deposit_value = typeof deposit == 'string' ? deposit : nearApi.utils.format.parseNearAmount('' + deposit);
+            const actions = [method === '!transfer' ? nearApi.transactions.transfer(deposit_value) : nearApi.transactions.functionCall(method, Buffer.from(JSON.stringify(params)), gas, deposit_value)];
+            const keypair = nearApi.utils.KeyPair.fromRandom('ed25519');
+            const provider = new nearApi.providers.JsonRpcProvider({url: 'https://rpc.' + network + '.near.org'});
+            const block = await provider.block({finality: 'final'});
+            const txs = [nearApi.transactions.createTransaction(account_id, keypair.publicKey, receiver_id, 1, actions, nearApi.utils.serialize.base_decode(block.header.hash))];
+            const newUrl = new URL('sign', 'https://wallet.' + network + '.near.org/');
+            newUrl.searchParams.set('transactions', txs.map(transaction => nearApi.utils.serialize.serialize(nearApi.transactions.SCHEMA, transaction)).map(serialized => Buffer.from(serialized).toString('base64')).join(','));
+            newUrl.searchParams.set('callbackUrl', callback_url);
+            if (meta)
+                newUrl.searchParams.set('meta', meta);
+            return newUrl.href;
+        } catch (e) {
+            return api.reject(e);
+        }
+    },
 
-            const account = new nearApi.Account({provider: nearRpc});
+    /**
+     * @return {string}
+     */
+    View: async function (recipient, method, params, rpc_node, headers) {
+        try {
+            let rpc = rpc_node || settings.rpc_node;
+            const nearRpc = new nearApi.providers.JsonRpcProvider({url: rpc});
+
+            const account = new nearApi.Account({
+                    provider: nearRpc,
+                    networkId: getNetworkFromRpcNode(rpc),
+                    signer: recipient,
+                    headers: (typeof headers !== undefined) ? headers : {}
+                },
+                recipient);
             return await account.viewFunction(
                 recipient,
                 method,
@@ -26,9 +58,6 @@ module.exports = {
 
     Init: async function (master_account_id, master_key, nft_contract, server_host, server_port, rpc_node) {
         try {
-            if (rpc_node && !settings.allow_rpc_update)
-                return api.reject("RPC update restricted. Please update config if you have access");
-
             const new_settings = settings;
             if (master_account_id) new_settings.master_account_id = master_account_id;
             if (master_key) new_settings.master_key = master_key;
@@ -100,16 +129,17 @@ module.exports = {
         }
     },
 
-    Call: async function (account_id, private_key, attached_tokens, attached_gas, recipient, method, params) {
+    Call: async function (account_id, private_key, attached_tokens, attached_gas, recipient, method, params, network, rpc_node, headers) {
         try {
-            const account = await this.GetAccountByKey(account_id, private_key);
+            const account = await this.GetAccountByKey(account_id, private_key, network, rpc_node, headers);
 
-            return await account.functionCall(
-                recipient,
-                method,
-                params,
-                attached_gas,
-                attached_tokens);
+            return await account.functionCall({
+                contractId: recipient,
+                methodName: method,
+                args: params,
+                gas: attached_gas,
+                attachedDeposit: attached_tokens
+            });
         } catch (e) {
             return api.reject(e);
         }
@@ -119,10 +149,10 @@ module.exports = {
         try {
             const keyPair = nearApi.utils.KeyPair.fromString(settings.master_key);
             const keyStore = new nearApi.keyStores.InMemoryKeyStore();
-            keyStore.setKey("default", settings.master_account_id, keyPair);
+            keyStore.setKey("testnet", settings.master_account_id, keyPair);
 
             const near = await nearApi.connect({
-                networkId: "default",
+                networkId: "testnet",
                 deps: {keyStore},
                 masterAccount: settings.master_account_id,
                 nodeUrl: settings.rpc_node
@@ -143,10 +173,10 @@ module.exports = {
 
             const keyPair = nearApi.utils.KeyPair.fromString(account.private_key);
             const keyStore = new nearApi.keyStores.InMemoryKeyStore();
-            keyStore.setKey("default", account.account_id, keyPair);
+            keyStore.setKey("testnet", account.account_id, keyPair);
 
             const near = await nearApi.connect({
-                networkId: "default",
+                networkId: "testnet",
                 deps: {keyStore},
                 masterAccount: account.account_id,
                 nodeUrl: settings.rpc_node
@@ -158,19 +188,23 @@ module.exports = {
         }
     },
 
-    GetAccountByKey: async function (account_id, private_key) {
+    GetAccountByKey: async function (account_id, private_key, network, rpc_node, headers) {
         try {
+            network = network || "testnet";
+            rpc_node = rpc_node || settings.rpc_node;
+
             private_key = private_key.replace('"', '');
 
             const keyPair = nearApi.utils.KeyPair.fromString(private_key);
             const keyStore = new nearApi.keyStores.InMemoryKeyStore();
-            keyStore.setKey("default", account_id, keyPair);
+            keyStore.setKey(network, account_id, keyPair);
 
             const near = await nearApi.connect({
-                networkId: "default",
+                networkId: network,
                 deps: {keyStore},
                 masterAccount: account_id,
-                nodeUrl: settings.rpc_node
+                nodeUrl: rpc_node,
+                headers: (typeof headers !== undefined) ? headers : {}
             });
 
             return await near.account(account_id);

@@ -6,6 +6,15 @@ const fs = require('fs');
 const storageFolder = "storage";
 
 module.exports = {
+    GenerateKeyPair: async function () {
+        const keypair = nearApi.utils.KeyPair.fromRandom('ed25519');
+
+        return {
+            public_key: keypair.publicKey.toString(),
+            private_key: keypair.secretKey
+        };
+    },
+
     CreateKeyPair: async function (name) {
         const keypair = nearApi.utils.KeyPair.fromRandom('ed25519');
 

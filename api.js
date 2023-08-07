@@ -4,10 +4,12 @@ module.exports = {
     CONFIG_PATH,
 
     reject: (err) => {
-        console.log(err);
         return {error: typeof err === "string" ? err : JSON.stringify(err)};
     },
     notify: (message) => {
         return {text: message};
+    },
+    getNetworkFromRpcNode(rpc_node){
+        return rpc_node.replace("https://rpc.", "").replace(".near.org", "");
     }
 }

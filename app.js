@@ -6,16 +6,29 @@ const token = require('./token');
 const blockchain = require('./blockchain');
 const api = require('./api');
 const faker = require('faker');
-
+const crypto = require('crypto');
+const CatboxMemory = require('@hapi/catbox-memory');
 const Hapi = require('@hapi/hapi');
-let fs = require('fs');
+const fs = require('fs');
+const {Client} = require('pg');
+Client.poolSize = 100;
 
 const settings = JSON.parse(fs.readFileSync(api.CONFIG_PATH, 'utf8'));
+const ViewCacheExpirationInSeconds = 10;
+const ViewGenerateTimeoutInSeconds = 30;
 
 const init = async () => {
     const server = Hapi.server({
         port: settings.server_port,
         host: settings.server_host,
+        cache: [
+            {
+                name: 'near-api-cache',
+                provider: {
+                    constructor: CatboxMemory
+                }
+            }
+        ]
     });
 
     function processRequest(request) {
@@ -52,7 +65,7 @@ const init = async () => {
         path: '/',
         handler: () => {
             return api.notify(
-                'Welcome to NEAR API! ' +
+                'Welcome to NEAR REST API SERVER (https://github.com/near-examples/near-api-rest-server)! ' +
                 (!settings.master_account_id
                     ? 'Please initialize your NEAR account in order to use simple nft mint/transfer methods'
                     : `Master Account: ${settings.master_account_id}`)
@@ -63,15 +76,34 @@ const init = async () => {
     server.route({
         method: 'POST',
         path: '/view',
-        handler: async (request) => {
+        handler: async (request, h) => {
             request = processRequest(request);
-            return await blockchain.View(
-                request.payload.contract,
-                request.payload.method,
-                request.payload.params
-            );
-        },
+
+            if (request.payload.disabled_cache) {
+                return blockchain.View(
+                    request.payload.contract,
+                    request.payload.method,
+                    request.payload.params,
+                    request.payload.rpc_node,
+                    request.payload.headers
+                );
+            } else {
+                request.payload.request_name = "view";
+                return replyCachedValue(h, await server.methods.view(request.payload));
+            }
+        }
     });
+
+    server.method(
+        'view',
+        async (params) => blockchain.View(
+            params.contract,
+            params.method,
+            params.params,
+            params.rpc_node,
+            params.headers
+        ),
+        getServerMethodParams());
 
     server.route({
         method: 'POST',
@@ -86,6 +118,9 @@ const init = async () => {
                 contract,
                 method,
                 params,
+                network,
+                rpc_node,
+                headers
             } = request.payload;
             return await blockchain.Call(
                 account_id,
@@ -94,7 +129,10 @@ const init = async () => {
                 attached_gas,
                 contract,
                 method,
-                params
+                params,
+                network,
+                rpc_node,
+                headers
             );
         },
     });
@@ -103,6 +141,10 @@ const init = async () => {
         method: 'POST',
         path: '/init',
         handler: async (request) => {
+            if (settings.init_disabled) {
+                return api.reject('Method now allowed');
+            }
+
             request = processRequest(request);
             let {
                 master_account_id,
@@ -155,10 +197,16 @@ const init = async () => {
     server.route({
         method: 'GET',
         path: '/view_nft/{token_id}',
-        handler: async (request) => {
-            return await token.ViewNFT(request.params.token_id);
+        handler: async (request, h) => {
+            request.params.request_name = "view_nft";
+            return replyCachedValue(h, await server.methods.viewNFT(request.params));
         },
     });
+
+    server.method(
+        'viewNFT',
+        async (params) => await token.ViewNFT(params.token_id),
+        getServerMethodParams());
 
     server.route({
         method: 'POST',
@@ -212,6 +260,13 @@ const init = async () => {
         }
     });
 
+    server.route({
+        method: 'GET',
+        path: '/keypair',
+        handler: async () => {
+            return await user.GenerateKeyPair();
+        }
+    });
 
     server.route({
         method: 'POST',
@@ -238,7 +293,7 @@ const init = async () => {
 
                 if (tx) {
                     if (min === max) {
-                        let create_token = await token.ViewNFT(tokenId, account_id);
+                        let create_token = await token.ViewNFT(tokenId, contract);
                         create_token.token_id = tokenId;
                         response.push({token: create_token, tx: tx});
                     } else {
@@ -256,7 +311,7 @@ const init = async () => {
     server.route({
         method: 'POST',
         path: '/transfer_nft',
-        handler: async (request, h) => {
+        handler: async (request) => {
             request = processRequest(request);
 
             let {
@@ -294,6 +349,81 @@ const init = async () => {
         },
     });
 
+    server.route({
+        method: 'GET',
+        path: '/about',
+        handler: async () => {
+            const json = require('./package.json');
+            return "NEAR REST API SERVER Ver. " + json.version;
+        }
+    });
+
+    server.route({
+        method: 'POST',
+        path: '/explorer',
+        handler: async (request) => {
+            let {
+                user,
+                host,
+                database,
+                password,
+                port,
+                query,
+                parameters
+            } = request.payload;
+
+            const client = new Client({
+                user,
+                host,
+                database,
+                password,
+                port,
+            });
+
+            if (["104.199.89.51", "35.184.214.98"].includes(host)) {
+                return api.reject('Please run explorer function only on your own NEAR REST API SERVER instance, https://github.com/near-examples/near-api-rest-server');
+            }
+
+            try {
+                client.connect();
+                let response = await client.query(query, parameters);
+                return response.rows;
+            } catch (ex) {
+                return api.reject('Error. ' + ex.message);
+            }
+        },
+    });
+
+    server.route({
+        method: 'POST',
+        path: '/sign_url',
+        handler: async (request) => {
+            let {
+                account_id,
+                method,
+                params,
+                deposit,
+                gas,
+                receiver_id,
+                meta,
+                callback_url,
+                network
+            } = request.payload;
+
+            return blockchain.GetSignUrl(
+                account_id,
+                method,
+                params,
+                deposit,
+                gas,
+                receiver_id,
+                meta,
+                callback_url,
+                network
+            );
+        },
+    });
+
     await server.start();
     console.log('Server running on %s', server.info.uri);
 };
@@ -302,5 +432,26 @@ process.on('unhandledRejection', (err) => {
     console.log(err);
     process.exit(1);
 });
+
+const getServerMethodParams = () => {
+    return {
+        generateKey: (params) => {
+            let hash = crypto.createHash('sha1');
+            hash.update(JSON.stringify(params));
+            return hash.digest('base64');
+        },
+        cache: {
+            cache: 'near-api-cache',
+            expiresIn: ViewCacheExpirationInSeconds * 1000,
+            generateTimeout: ViewGenerateTimeoutInSeconds * 1000,
+            getDecoratedValue: true
+        }
+    }
+};
+
+const replyCachedValue = (h, {value, cached}) => {
+    const lastModified = cached ? new Date(cached.stored) : new Date();
+    return h.response(value).header('Last-Modified', lastModified.toUTCString());
+};
 
 init();

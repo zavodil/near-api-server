@@ -2,6 +2,10 @@
 
 > Interact with the NEAR blockchain using a simple REST API.
 
+###### Live Demo:
+* [REST API Endpoint for NEAR Testnet](https://rest.nearspace.info) 
+* [Web Console for `view`/`call` requests](https://api.nearspace.info) 
+
 ---
 
 ## Overview
@@ -20,6 +24,8 @@ _Click on a route for more information and examples_
 | [`/create_user`](#create_user)             | POST   | Creates a NEAR [sub-account](https://docs.near.org/docs/concepts/account#subaccounts) and stores credentials in `/storage`. |
 | [`/parse_seed_phrase`](#parse_seed_phrase) | POST   | Displays public and private key pair from a given seed phrase.                                                              |
 | [`/balance`](#balance)                     | GET    | Displays account balance.                                                                                                   |
+| [`/keypair`](#keypair)                     | GET    | Generates Ed25519 key pair.                                                                                                 |
+| [`/explorer`](#explorer)                   | POST   | Run SELECT query in NEAR explorer database.                                                                                 |
 |                                            |        |                                                                                                                             |
 | **NFT EXAMPLE**                            |        |                                                                                                                             |
 | [`/mint_nft`](#mint_nft)                   | POST   | Mints an NFT for a given contract.                                                                                          |
@@ -30,7 +36,7 @@ _Click on a route for more information and examples_
 
 ## Requirements
 
-- [NEAR Account](https://docs.near.org/docs/develop/basics/create-account) _(with access to private key or seed phrase)_
+- [NEAR Account](https://docs.near.org/concepts/basics/account) _(with access to private key or seed phrase)_
 - [Node.js](https://nodejs.org/en/download/package-manager/)
 - [npm](https://www.npmjs.com/get-npm) or [Yarn](https://yarnpkg.com/getting-started/install)
 - API request tool such as [Postman](https://www.postman.com/downloads/)
@@ -60,11 +66,11 @@ Default settings:
   "server_host": "localhost",
   "server_port": 3000,
   "rpc_node": "https://rpc.testnet.near.org",
-  "allow_rpc_update": false
+  "init_disabled": true
 }
 ```
 
-_**Note:** `allow_rpc_update` determines if this param can be changed via `/init` route._
+_**Note:** `init_disabled` determines if params can be changed via `/init` route._
 
 4. Start server
 
@@ -88,7 +94,7 @@ node app
 | `seed_phrase` _OR_ `private_key` | _Seed phrase OR private key of the account id above._                                |
 | `contract`                       | _wasm file of compiled contract located in the `/contracts` folder of this project._ |
 
-_**Note:** Use [`near login`](https://docs.near.org/docs/tools/near-cli#near-login) to save your key pair to your local machine._
+_**Note:** Use [`near login`](https://docs.near.org/tools/near-cli#near-login) to save your key pair to your local machine._
 
 Example:
 
@@ -100,7 +106,9 @@ Example:
 }
 ```
 
-Example Response:
+<details>
+<summary><strong>Example Response:</strong> </summary>
+<p>
 
 ```json
 {
@@ -175,6 +183,9 @@ Example Response:
 }
 ```
 
+</p>
+</details>
+
 ---
 
 ## `/view`
@@ -199,7 +210,9 @@ Example:
 }
 ```
 
-Example Response:
+<details>
+<summary><strong>Example Response:</strong> </summary>
+<p>
 
 ```json
 [
@@ -236,6 +249,9 @@ Example Response:
 ]
 ```
 
+</p>
+</details>
+
 ---
 
 ## `/call`
@@ -270,7 +286,10 @@ Example:
 }
 ```
 
-Example Response:
+
+<details>
+<summary><strong>Example Response:</strong> </summary>
+<p>
 
 ```json
 {
@@ -368,6 +387,9 @@ Example Response:
 }
 ```
 
+</p>
+</details>
+
 ---
 
 # Utils
@@ -415,6 +437,49 @@ Example Response:
 ```
 
 ---
+
+## `/sign_url`
+
+> _Generates a link to NEAR Wallet with provided transaction details. May be used to redirect user to the wallet and perform a transaction without generation application-specific keys and granting access._
+
+**Method:** **`POST`**
+
+| Param                            | Description                                                                                                             |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `account_id`                     | _Signer Account_                                                                                                        |
+| `receiver_id`                    | _Recipient contract account, may be dApp contract or personal account_                                                  |
+| `method`                         | _Contract method to call. Use `!transfer` to transfer NEAR tokens_                                                      |
+| `params`                         | _Transaction arguments_                                                                                                 |
+| `deposit`                        | _Attached deposit in NEAR_                                                                                              |
+| `gas`                            | _Attached gas in yoctoNEAR_                                                                                             |
+| `meta`                           | _Transaction meta. May be empty_                                                                                        |
+| `callback_url`                   | _URL to redirect user after the transaction. May be empty_                                                              |
+| `network`                        | _Your network: mainnet/testnet_                                                                                         |
+
+Example:
+
+```
+{
+	"account_id": "zavodil.testnet",
+	"receiver_id": "inotel.pool.f863973.m0",
+	"method": "ping",
+	"params": {},
+	"deposit": 0,
+	"gas": 30000000000000,	
+	"meta": "",
+	"callback_url": "",
+	"network": "testnet"
+}
+```
+
+Example Response:
+
+```
+    https://wallet.testnet.near.org/sign?transactions=DwAAAHphdm9kaWwudGVzdG5ldADKei8CC%2BlhIM9GNPitr87eHXpqdnQsCdLD%2B0ADdTJbqwEAAAAAAAAAFgAAAGlub3RlbC5wb29sLmY4NjM5NzMubTCfZPsioMcZCQRg4Uy7rOu4ERg10QV9c415FuXE0VDRRAEAAAACBAAAAHBpbmcCAAAAe30A4FfrSBsAAAAAAAAAAAAAAAAAAAAAAAA%3D&callbackUrl=
+```
+
+Approving this url performed a transaction [143c9MNaqXFXuiobjUaQ8FPSBR2ukYbCMzGdPe6HqXEq](https://explorer.testnet.near.org/transactions/143c9MNaqXFXuiobjUaQ8FPSBR2ukYbCMzGdPe6HqXEq)
+
 
 ## `/create_user`
 
@@ -488,6 +553,84 @@ Example Response:
 
 ---
 
+## `/keypair`
+
+> _Generates Ed25519 key pair._
+
+**Method:** **`GET`**
+
+Example:
+
+```
+http://localhost:3000/keypair
+```
+
+Example Response:
+
+```
+{
+  "public_key": "ed25519:3pNJK3fwP14UEbPjQqgDASwWR4XmbAEQBeNsyThhtNKY",
+  "private_key": "3s9nVrCU4MER3w9cxXcJM58RGRzFNJnLzo9vgQiNrkuGW3Xp7Up6cYnY4JKQZ7Qp3GhmXckrApRyDPAfzo2oCm8a"
+}
+```
+
+## `/explorer`
+
+> _Run SELECT query in NEAR explorer database._
+
+**Method:** **`POST`**
+
+| Param                            | Description                                                 |
+| -------------------------------- | ----------------------------------------------------------- |
+| `user`                           | _Public account, `public_readonly`_                         |
+| `host`                           | _NEAR indexer host, `testnet.db.explorer.indexer.near.dev`_ |
+| `database`                       | _Name of the database, `testnet_explorer`_                  |
+| `password`                       | _Password, `nearprotocol`_                                  |
+| `port`                           | _Port, `5432`_                                              |
+| `parameters`                     | _Array of query parameters, `[]`_                           |
+| `query`                          | _Query without tabs, linebreaks and special characters_     |     
+
+Check indexer server credentials on a [github](https://github.com/near/near-indexer-for-explorer/#shared-public-access). 
+
+Example:
+
+```json
+{
+  "user": "public_readonly",
+  "host": "35.184.214.98",
+  "database": "testnet_explorer",
+  "password": "nearprotocol",
+  "port": 5432,
+  "parameters": ["testnet", 1],
+  "query": "SELECT * FROM action_receipt_actions WHERE receipt_receiver_account_id = $1 LIMIT $2"
+}
+```
+
+<details>
+<summary><strong>Example Response:</strong> </summary>
+<p>
+
+```json
+[
+  {
+    "receipt_id": "GZMyzjDWPJLjrCuQG82uHj3xRVHwdDnWHH1gCnSBejkR",
+    "index_in_action_receipt": 0,
+    "action_kind": "TRANSFER",
+    "args": {
+      "deposit": "1273665187500000000"
+    },
+    "receipt_predecessor_account_id": "system",
+    "receipt_receiver_account_id": "testnet",
+    "receipt_included_in_block_timestamp": "1619207391172257749"
+  }
+]
+```
+
+</p>
+</details>
+
+---
+
 # NFTs
 
 ---
@@ -535,7 +678,9 @@ Example:
 }
 ```
 
-Example Response:
+<details>
+<summary><strong>Example Response:</strong> </summary>
+<p>
 
 ```json
 [
@@ -551,7 +696,12 @@ Example Response:
 ]
 ```
 
+</p>
+</details>
+
 _(`tx` is the transaction hash that can be queried in [NEAR Explorer](http://explorer.testnet.near.org))_
+
+---
 
 ### Batch NFT minting (simple)
 
@@ -570,7 +720,9 @@ Example:
 
 _(This creates `EXAMPLE_TOKEN_31`, `EXAMPLE_TOKEN_32`, & `EXAMPLE_TOKEN_33`)_
 
-Example Response:
+<details>
+<summary><strong>Example Response:</strong> </summary>
+<p>
 
 ```json
 [
@@ -585,6 +737,9 @@ Example Response:
   }
 ]
 ```
+
+</p>
+</details>
 
 _(Above response are transaction hashes that can be queried in [NEAR Explorer](http://explorer.testnet.near.org))_
 
